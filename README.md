@@ -18,6 +18,7 @@ How it works:
 - The grid starts **hidden**, so children make a ballpark estimate first. **Show squares** (bottom left of the map) brings it back: 1 square ≈ 1 hour.
 - **How it works** (top right, and *Why is it tricky?* after each Reveal) plays a short 5-step animation: 1 square ≈ 1 hour, counting squares along the line, why real routes curve, why take-off and landing add time, and why "close is great".
 - **Results** (top right) lists estimates, with Copy and Clear.
+- **Full screen** (top right) hides the browser bars; press it again or Esc to leave. It hides itself in browsers that do not support it.
 - **Teacher** has flag filters, grid, benchmark flights, animations (on/off and plane speed) and reset.
 
 ## Changing the data

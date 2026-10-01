@@ -24,6 +24,14 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     check(await page.$eval('#grid', e => getComputedStyle(e).display) === 'none', `${vp.name}: grid hidden at start`);
     check(/Egypt/.test(await page.textContent('#known')) && /5 hours/.test(await page.textContent('#known')) && /8 hours/.test(await page.textContent('#known')), `${vp.name}: known flights always on display`);
 
+    if (vp.name === 'whiteboard') {
+      await page.click('#fsBtn');
+      await page.waitForTimeout(400);
+      check(await page.evaluate(() => !!document.fullscreenElement) && /Exit/.test(await page.textContent('#fsBtn')), `${vp.name}: full screen turns on`);
+      await page.click('#fsBtn');
+      await page.waitForTimeout(400);
+      check(await page.evaluate(() => !document.fullscreenElement) && /Full screen/.test(await page.textContent('#fsBtn')), `${vp.name}: full screen turns off`);
+    }
     // tap a flag (Japan), estimate, reveal
     const jp = await page.$('[data-dest="jp"] .badgeInner use');
     await jp.click();
