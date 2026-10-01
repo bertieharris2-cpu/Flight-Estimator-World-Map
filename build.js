@@ -2,8 +2,9 @@
 // Usage: node build.js
 const fs = require('fs');
 const path = require('path');
-const { feature } = require('topojson-client');
+const { feature, mesh } = require('topojson-client');
 const topo = require('world-atlas/land-110m.json');
+const countries = require('world-atlas/countries-110m.json');
 
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
 const { lonMin, latMax } = data.map;
@@ -33,6 +34,15 @@ for (const f of land.features) {
   }
 }
 
+// Country borders (shared edges only, so coastlines aren't doubled). Split lines at the date line.
+let borders = '';
+for (const line of mesh(countries, countries.objects.countries, (a, b) => a !== b).coordinates) {
+  let seg = [];
+  const flush = () => { if (seg.length > 1) borders += 'M' + seg.map(([lon, lat]) => px(lon).toFixed(1) + ' ' + py(lat).toFixed(1)).join('L'); seg = []; };
+  line.forEach((p, i) => { if (i && Math.abs(p[0] - line[i - 1][0]) > 180) flush(); seg.push(p); });
+  flush();
+}
+
 const symbols = Object.entries(data.flags)
   .map(([id, f]) => `<symbol id="flag-${id}" viewBox="${f.viewBox}" preserveAspectRatio="none">${f.svg}</symbol>`)
   .join('\n');
@@ -45,6 +55,8 @@ const appData = { map: data.map, home: data.home, benchmarks: data.benchmarks, c
 
 let html = fs.readFileSync(path.join(__dirname, 'src', 'template.html'), 'utf8');
 html = html.replace('__LAND_PATH__', () => d)
+  .replace('__BORDER_PATH__', () => borders)
+  .replace(/__MW__/g, String((data.map.lonMax - lonMin) * U)).replace(/__MH__/g, String((latMax - data.map.latMin) * U))
   .replace('__FLAG_SYMBOLS__', () => symbols)
   .replace('__APP_DATA__', () => JSON.stringify(appData));
 fs.writeFileSync(path.join(__dirname, 'world-map-estimator.html'), html);

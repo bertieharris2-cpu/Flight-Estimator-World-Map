@@ -8,7 +8,7 @@
 <style>
 :root {
   --bg: #07121f; --panel: #0e2238; --panel2: #143052; --amber: #ffc83d; --white: #fff;
-  --muted: #a9bdd3; --ocean: #0b2340; --land: #3d6b55; --good: #7ee0a1;
+  --muted: #a9bdd3; --ocean: #0b2340; --land: #3d6b55; --good: #7ee0a1; --line: #2e5580;
   --mono: "Courier New", ui-monospace, Menlo, Consolas, monospace;
   --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
 }
@@ -16,112 +16,126 @@
 html, body { margin: 0; height: 100%; background: var(--bg); color: var(--white); font-family: var(--sans); overflow: hidden; }
 button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
 body { display: flex; flex-direction: column; }
-header { display: flex; align-items: center; gap: 16px; padding: 8px 16px; background: var(--panel); border-bottom: 3px solid var(--amber); flex: none; }
-header h1 { font-family: var(--mono); color: var(--amber); font-size: clamp(22px, 2.4vw, 40px); margin: 0; letter-spacing: 2px; text-transform: uppercase; flex: 1; }
-.btn { min-height: 52px; min-width: 52px; padding: 8px 18px; border-radius: 12px; border: 2px solid #2e5580; background: var(--panel2); font-weight: 700; font-size: 20px; }
+header { display: flex; align-items: center; gap: 12px; padding: 6px 14px; background: var(--panel); border-bottom: 3px solid var(--amber); flex: none; }
+header h1 { font-family: var(--mono); color: var(--amber); font-size: clamp(22px, 2.2vw, 36px); margin: 0; letter-spacing: 2px; text-transform: uppercase; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.btn { min-height: 52px; min-width: 52px; padding: 6px 18px; border-radius: 12px; border: 2px solid var(--line); background: var(--panel2); font-weight: 700; font-size: 20px; }
 .btn:active { transform: scale(.96); }
 .btn.amber { background: var(--amber); color: #07121f; border-color: var(--amber); }
 .btn:disabled { opacity: .4; cursor: default; }
 .btn.small { min-height: 48px; font-size: 17px; padding: 6px 12px; }
+.btn[aria-pressed="true"] { background: var(--amber); color: #07121f; border-color: var(--amber); }
+.count { display: inline-block; min-width: 1.6em; padding: 0 .35em; margin-left: 6px; border-radius: 1em; background: var(--amber); color: #07121f; font-size: .85em; }
 
-#mapWrap { position: relative; flex: 1 1 auto; min-height: 200px; background: var(--ocean); overflow: hidden; }
+#mapWrap { position: relative; flex: 1 1 auto; min-height: 180px; background: var(--ocean); overflow: hidden; }
 #map { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; user-select: none; -webkit-user-select: none; display: block; }
 #zoomBtns { position: absolute; right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
 #zoomBtns .btn { width: 64px; height: 64px; font-size: 34px; padding: 0; background: rgba(14,34,56,.92); }
 #zoomBtns .btn.world { font-size: 15px; font-family: var(--mono); }
-#key { position: absolute; left: 12px; bottom: 12px; background: rgba(7,18,31,.85); border: 2px solid #2e5580; border-radius: 10px; padding: 6px 12px; font-size: 18px; display: flex; align-items: center; gap: 10px; pointer-events: none; }
-#key .sq { width: 26px; height: 26px; border: 2px solid var(--amber); display: inline-block; }
+#squaresBox { position: absolute; left: 12px; bottom: 12px; display: flex; align-items: center; gap: 10px; }
+#squaresBtn { min-height: 56px; font-size: 19px; background: rgba(14,34,56,.92); display: flex; align-items: center; gap: 10px; }
+#squaresBtn[aria-pressed="true"] { background: var(--amber); }
+#squaresBtn .sq { width: 24px; height: 24px; border: 2px solid currentColor; display: inline-block; background-image: linear-gradient(currentColor, currentColor), linear-gradient(currentColor, currentColor); background-size: 2px 100%, 100% 2px; background-position: center; background-repeat: no-repeat; }
+#key { background: rgba(7,18,31,.88); border: 2px solid var(--amber); border-radius: 10px; padding: 8px 12px; font-size: 18px; font-weight: 700; }
 
 .land { fill: var(--land); }
-.grid line { stroke: var(--amber); stroke-opacity: .45; stroke-width: 1; vector-effect: non-scaling-stroke; }
+.borders { fill: none; stroke: #d7e6d9; stroke-opacity: .45; stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.grid line { stroke: var(--amber); stroke-opacity: .5; stroke-width: 1.2; vector-effect: non-scaling-stroke; }
 .tz line { stroke: #8fd3ff; stroke-opacity: .6; stroke-width: 2; stroke-dasharray: 2 6; vector-effect: non-scaling-stroke; }
 .bench { stroke: #fff; stroke-width: 4; stroke-dasharray: 2 10; stroke-linecap: round; fill: none; }
 .flight { stroke: var(--amber); stroke-width: 6; stroke-dasharray: 3 12; stroke-linecap: round; fill: none; }
-.lineHalo { stroke: rgba(7,18,31,.55); stroke-width: 10; fill: none; stroke-linecap: round; }
+.lineHalo { stroke: rgba(7,18,31,.55); stroke-width: 10; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .benchLabel rect { fill: #fff; stroke: #07121f; stroke-width: 2; }
 .benchLabel text { fill: #07121f; font-weight: 700; font-family: var(--sans); }
 .marker { cursor: pointer; }
+.anim .marker { transition: opacity .25s; }
 .marker .leader { stroke: #fff; stroke-width: 2; stroke-opacity: .8; }
 .marker .dot { fill: #fff; stroke: #07121f; stroke-width: 2; }
-.marker .frame { fill: none; stroke: #fff; stroke-width: 2; }
+.marker .frame { fill: none; stroke: #fff; stroke-width: 1.5; }
 .marker.selected .frame { stroke: var(--amber); stroke-width: 5; }
-.marker .lbl { fill: #fff; font-weight: 700; font-family: var(--sans); paint-order: stroke; stroke: #07121f; stroke-width: 5px; stroke-linejoin: round; }
-.marker.home .lbl { fill: var(--amber); }
+.marker .lbl { fill: #fff; font-weight: 700; font-family: var(--sans); paint-order: stroke; stroke: #07121f; stroke-width: 4px; stroke-linejoin: round; }
+.marker.home .lbl, .marker.selected .lbl { fill: var(--amber); }
+/* while a flight is being planned, the other flags step back */
+.planning .marker:not(.selected):not(.home):not(.bm) { opacity: .28; }
+.planning .marker:not(.selected):not(.home):not(.bm) .lbl { display: none; }
+.planning .marker.bm:not(.selected) { opacity: .75; }
 .badgeInner { transform-box: fill-box; transform-origin: center; }
 .anim .badgeInner.pop { animation: pop .45s cubic-bezier(.3,1.6,.5,1) both; }
 @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
 .hit { fill: transparent; }
 .plane { fill: #fff; stroke: #07121f; stroke-width: 1.5; }
 
-#bottom { flex: none; min-height: clamp(200px, 30vh, 330px); display: flex; gap: 12px; padding: 10px 12px; background: var(--bg); border-top: 3px solid var(--amber); }
-.card { background: var(--panel); border-radius: 14px; padding: 12px 16px; border: 2px solid #1d3d61; }
-#estimate { flex: 1.7; min-width: 0; }
-#results { flex: 1; min-width: 280px; display: flex; flex-direction: column; }
-.card h2 { font-family: var(--mono); color: var(--amber); margin: 0 0 8px; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
-.prompt { font-size: clamp(22px, 2vw, 32px); margin: 18px 0; color: var(--muted); }
-.route { display: flex; align-items: center; gap: 12px; font-size: clamp(22px, 1.9vw, 32px); font-weight: 700; flex-wrap: wrap; }
-.route svg { height: 40px; border: 2px solid #fff; border-radius: 3px; }
-.stepRow { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
-.stepRow .lab { font-size: 22px; color: var(--muted); }
-.step { width: 76px; height: 76px; border-radius: 50%; font-size: 44px; line-height: 1; padding: 0; background: var(--panel2); border: 3px solid var(--amber); color: var(--amber); font-weight: 700; }
-.estVal { font-family: var(--mono); font-size: clamp(30px, 2.8vw, 48px); font-weight: 700; min-width: 5.5em; text-align: center; color: #fff; background: #07121f; border-radius: 12px; padding: 6px 10px; }
-#typed { width: 110px; height: 52px; font-size: 22px; border-radius: 10px; border: 2px solid #2e5580; background: #07121f; color: #fff; padding: 0 10px; }
-#revealBtn { min-height: 76px; font-size: 30px; padding: 0 30px; font-family: var(--mono); letter-spacing: 1px; }
-.result { font-size: clamp(20px, 1.7vw, 28px); line-height: 1.35; }
-.result .big { font-size: clamp(26px, 2.3vw, 38px); font-weight: 700; }
-.result .sum { font-family: var(--mono); font-size: clamp(26px, 2.3vw, 38px); color: var(--amber); font-weight: 700; }
-.note { font-size: 17px; color: var(--muted); margin-top: 6px; }
-.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+#bar { flex: none; display: flex; gap: 12px; padding: 8px 12px; background: var(--panel); border-top: 3px solid var(--amber); align-items: stretch; }
+#known { flex: none; display: flex; flex-direction: column; justify-content: center; gap: 4px; padding: 6px 14px; border-radius: 12px; background: #07121f; border: 2px solid #fff; }
+#known[hidden] { display: none; }
+#known .t { font-family: var(--mono); color: var(--amber); font-size: 15px; font-weight: 700; text-transform: uppercase; }
+#known .k { display: flex; align-items: center; gap: 8px; font-size: 20px; font-weight: 700; white-space: nowrap; }
+#known svg { height: 22px; border: 1px solid #fff; }
+#estimate { flex: 1; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; min-height: 84px; }
+.steps { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; font-size: clamp(20px, 1.7vw, 28px); }
+.steps .s { padding: 6px 14px; border-radius: 30px; border: 2px solid var(--line); color: var(--muted); }
+.steps .s.on { border-color: var(--amber); color: #07121f; background: var(--amber); font-weight: 700; }
+.route { display: flex; align-items: center; gap: 10px; font-size: clamp(20px, 1.6vw, 28px); font-weight: 700; }
+.route svg { height: 32px; border: 1px solid #fff; border-radius: 2px; }
+.stepper { display: flex; align-items: center; gap: 10px; }
+.stepper .lab { font-size: 19px; color: var(--muted); }
+.step { width: 68px; height: 68px; border-radius: 50%; font-size: 40px; line-height: 1; padding: 0; background: var(--panel2); border: 3px solid var(--amber); color: var(--amber); font-weight: 700; }
+.estVal { font-family: var(--mono); font-size: clamp(26px, 2.2vw, 40px); font-weight: 700; min-width: 5.2em; text-align: center; color: #fff; background: #07121f; border-radius: 12px; padding: 4px 8px; }
+#typed { width: 84px; height: 52px; font-size: 22px; border-radius: 10px; border: 2px solid var(--line); background: #07121f; color: #fff; padding: 0 8px; }
+.typeLab { font-size: 16px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+#revealBtn { min-height: 68px; font-size: 28px; padding: 0 26px; font-family: var(--mono); letter-spacing: 1px; }
+.res { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 22px; font-size: clamp(19px, 1.5vw, 26px); }
+.res .big { font-weight: 700; }
+.res .sum { font-family: var(--mono); color: var(--amber); font-weight: 700; font-size: clamp(24px, 2vw, 34px); }
+.note { font-size: 15px; color: var(--muted); }
+.grow { flex: 1; }
 
-#tableWrap { flex: 1; overflow: auto; min-height: 60px; }
-table { width: 100%; border-collapse: collapse; font-size: 18px; }
-th, td { text-align: left; padding: 4px 6px; border-bottom: 1px solid #1d3d61; }
-th { color: var(--amber); font-family: var(--mono); font-size: 15px; position: sticky; top: 0; background: var(--panel); }
-.empty { color: var(--muted); font-size: 18px; }
-#copyBox { width: 100%; height: 80px; margin-top: 6px; font-size: 14px; background: #07121f; color: #fff; border: 2px solid var(--amber); border-radius: 8px; }
-
-#teacher { position: absolute; top: 0; right: 0; bottom: 0; width: min(380px, 92vw); background: var(--panel); border-left: 3px solid var(--amber); padding: 14px; overflow-y: auto; z-index: 5; box-shadow: -10px 0 30px rgba(0,0,0,.5); }
-#teacher[hidden] { display: none; }
-#teacher h3 { font-family: var(--mono); color: var(--amber); margin: 16px 0 8px; font-size: 18px; text-transform: uppercase; }
-#teacher .grid2 { display: flex; flex-wrap: wrap; gap: 8px; }
+.drawer { position: absolute; top: 0; right: 0; bottom: 0; width: min(420px, 94vw); background: var(--panel); border-left: 3px solid var(--amber); padding: 14px; overflow-y: auto; z-index: 5; box-shadow: -10px 0 30px rgba(0,0,0,.5); }
+.drawer[hidden] { display: none; }
+.drawer h3 { font-family: var(--mono); color: var(--amber); margin: 16px 0 8px; font-size: 18px; text-transform: uppercase; }
+.drawer .head { display: flex; justify-content: space-between; align-items: center; }
+.drawer .head h3 { margin: 0; }
+.wrap { display: flex; flex-wrap: wrap; gap: 8px; }
 .toggle { display: flex; align-items: center; justify-content: space-between; min-height: 52px; font-size: 19px; gap: 10px; }
-.toggle button { min-width: 90px; }
-.toggle button[aria-pressed="true"] { background: var(--amber); color: #07121f; border-color: var(--amber); }
-.seg button[aria-pressed="true"] { background: var(--amber); color: #07121f; border-color: var(--amber); }
-.check { display: flex; align-items: center; gap: 12px; min-height: 48px; font-size: 19px; }
-.check input { width: 30px; height: 30px; accent-color: var(--amber); }
-.check svg { height: 22px; border: 1px solid #fff; }
-.check .tag { font-size: 14px; color: var(--amber); }
+.toggle .btn { min-width: 90px; }
+.check { display: flex; align-items: center; gap: 12px; min-height: 46px; font-size: 18px; }
+.check input { width: 28px; height: 28px; accent-color: var(--amber); flex: none; }
+.check svg { height: 20px; border: 1px solid #fff; flex: none; }
+.check .tag { font-size: 13px; color: var(--amber); }
+.cont { font-family: var(--mono); color: var(--muted); font-size: 14px; margin: 10px 0 2px; text-transform: uppercase; }
+table { width: 100%; border-collapse: collapse; font-size: 18px; }
+th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid #1d3d61; }
+th { color: var(--amber); font-family: var(--mono); font-size: 14px; }
+td svg { height: 16px; border: 1px solid #fff; vertical-align: -2px; }
+.empty { color: var(--muted); font-size: 18px; }
+#copyBox { width: 100%; height: 90px; margin-top: 8px; font-size: 14px; background: #07121f; color: #fff; border: 2px solid var(--amber); border-radius: 8px; }
 
-@media (max-width: 900px), (max-height: 700px) {
-  #bottom { flex-direction: column; max-height: 52vh; overflow-y: auto; }
-  #results { min-width: 0; }
-  .step { width: 64px; height: 64px; font-size: 38px; }
-  #revealBtn { min-height: 64px; font-size: 24px; }
-  .prompt { margin: 8px 0; }
-}
-@media (orientation: landscape) and (max-height: 900px) and (min-width: 901px) {
-  #bottom { flex-direction: row; max-height: none; }
+@media (max-width: 1000px) {
+  #bar { flex-wrap: wrap; }
+  #known { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 16px; width: 100%; }
+  .step { width: 60px; height: 60px; font-size: 34px; }
+  #revealBtn { min-height: 60px; font-size: 24px; }
 }
 </style>
 </head>
 <body>
 <header>
   <h1>&#9992; Flight Estimator</h1>
+  <button class="btn" id="resultsBtn" aria-expanded="false">Results<span class="count" id="resCount">0</span></button>
   <button class="btn" id="teacherBtn" aria-expanded="false">Teacher</button>
 </header>
 
 <div id="mapWrap">
   <svg id="map" xmlns="http://www.w3.org/2000/svg" aria-label="World map">
     <defs>
-      <clipPath id="mapClip"><rect id="clipRect" x="0" y="0" width="3600" height="1350"/></clipPath>
+      <clipPath id="mapClip"><rect x="0" y="0" width="__MW__" height="__MH__"/></clipPath>
       <symbol id="plane" viewBox="-16 -16 32 32"><path class="plane" d="M15 0c0-1.5-1.2-2-3-2H4L-4-13h-3.5L-3-2h-6l-2.5-3.5H-14L-12.5 0-14 5.5h2.5L-9 2h6l-4.5 11H-4L4 2h8c1.8 0 3-.5 3-2z"/></symbol>
       __FLAG_SYMBOLS__
     </defs>
     <g id="world">
       <g clip-path="url(#mapClip)">
-        <rect x="0" y="0" width="3600" height="1350" fill="#0b2340"/>
+        <rect x="0" y="0" width="__MW__" height="__MH__" fill="#0b2340"/>
         <path class="land" d="__LAND_PATH__"/>
+        <path class="borders" d="__BORDER_PATH__"/>
       </g>
       <g id="grid" class="grid"></g>
       <g id="tz" class="tz" style="display:none"></g>
@@ -130,42 +144,48 @@ th { color: var(--amber); font-family: var(--mono); font-size: 15px; position: s
     <g id="markers"></g>
     <use id="planeIcon" href="#plane" width="44" height="44" style="display:none"/>
   </svg>
-  <div id="key"><span class="sq"></span><span>1 square &asymp; 1 hour of flying</span></div>
+  <div id="squaresBox">
+    <button class="btn" id="squaresBtn" aria-pressed="false"><span class="sq"></span><span id="squaresTxt">Show squares</span></button>
+    <div id="key" hidden>1 square &asymp; 1 hour of flying</div>
+  </div>
   <div id="zoomBtns">
     <button class="btn" id="zoomIn" aria-label="Zoom in">+</button>
     <button class="btn" id="zoomOut" aria-label="Zoom out">&minus;</button>
     <button class="btn world" id="zoomReset" aria-label="Show whole world">WORLD</button>
   </div>
 
-  <aside id="teacher" hidden aria-label="Teacher options">
-    <div class="row" style="justify-content:space-between"><h3 style="margin:0">Teacher options</h3><button class="btn small" id="closeTeacher">Close</button></div>
+  <aside id="results" class="drawer" hidden aria-label="Results">
+    <div class="head"><h3>Results</h3><button class="btn small" id="closeResults">Close</button></div>
+    <div id="tableWrap" style="margin-top:10px"></div>
+    <div class="wrap" style="margin-top:12px"><button class="btn small" id="copyBtn">Copy</button><button class="btn small" id="clearBtn">Clear</button></div>
+    <textarea id="copyBox" hidden readonly aria-label="Results to copy"></textarea>
+    <p class="note">Results are saved on this device.</p>
+  </aside>
+
+  <aside id="teacher" class="drawer" hidden aria-label="Teacher options">
+    <div class="head"><h3>Teacher options</h3><button class="btn small" id="closeTeacher">Close</button></div>
     <h3>Flags</h3>
-    <div class="grid2"><button class="btn small" id="showAll">Show all</button><button class="btn small" id="hideAll">Hide all</button></div>
+    <div class="wrap"><button class="btn small" id="showAll">Show all</button><button class="btn small" id="hideAll">Hide all</button></div>
     <h3>By continent</h3>
-    <div class="grid2" id="contBtns"></div>
-    <h3>Countries</h3>
+    <div class="wrap" id="contBtns"></div>
+    <h3>Destinations</h3>
     <div id="countryList"></div>
     <h3>Map</h3>
-    <div class="toggle"><span>Grid</span><button class="btn small" id="tGrid" aria-pressed="true">On</button></div>
+    <div class="toggle"><span>Grid squares</span><button class="btn small" id="tGrid" aria-pressed="false">Off</button></div>
     <div class="toggle"><span>Benchmark flights<br><small style="color:var(--muted)">Spain &amp; New York</small></span><button class="btn small" id="tBench" aria-pressed="true">On</button></div>
     <div class="toggle" id="tzRow" hidden><span>Time zone lines</span><button class="btn small" id="tTz" aria-pressed="false">Off</button></div>
     <h3>Movement</h3>
     <div class="toggle"><span>Animations</span><button class="btn small" id="tAnim" aria-pressed="true">On</button></div>
-    <div class="toggle"><span>Plane speed</span><span class="seg grid2" id="speedSeg"><button class="btn small" data-speed="slow">Slow</button><button class="btn small" data-speed="normal">Normal</button><button class="btn small" data-speed="fast">Fast</button></span></div>
+    <div class="toggle"><span>Plane speed</span><span class="wrap" id="speedSeg"><button class="btn small" data-speed="slow">Slow</button><button class="btn small" data-speed="normal">Normal</button><button class="btn small" data-speed="fast">Fast</button></span></div>
     <h3>Start again</h3>
     <button class="btn small" id="resetAll">Reset map &amp; options</button>
-    <p class="note">Reset does not clear the results board. Use “Clear” on the board for that.</p>
+    <p class="note">Reset does not clear the results. Use “Clear” in Results for that.</p>
   </aside>
 </div>
 
-<div id="bottom">
-  <section class="card" id="estimate" aria-live="polite"></section>
-  <section class="card" id="results">
-    <div class="row" style="justify-content:space-between"><h2 style="margin:0">Results</h2>
-      <div class="row"><button class="btn small" id="copyBtn">Copy</button><button class="btn small" id="clearBtn">Clear</button></div></div>
-    <div id="tableWrap"></div>
-    <textarea id="copyBox" hidden readonly aria-label="Results to copy"></textarea>
-  </section>
+<div id="bar">
+  <div id="known" aria-label="Known flights"></div>
+  <section id="estimate" aria-live="polite"></section>
 </div>
 
 <script>
@@ -176,6 +196,7 @@ var U = 10, MW = (D.map.lonMax - D.map.lonMin) * U, MH = (D.map.latMax - D.map.l
 var SVGNS = 'http://www.w3.org/2000/svg';
 var STORE_KEY = 'flightEstimatorResults.v1';
 var SPEEDS = { slow: 250, normal: 550, fast: 1200 }; // map units per second
+var BEND = 0.7; // how far paths follow the real great-circle curve (0 = straight, 1 = full)
 
 function mx(lon) { return (lon - D.map.lonMin) * U; }
 function my(lat) { return (D.map.latMax - lat) * U; }
@@ -186,46 +207,71 @@ function el(tag, attrs, parent) {
   if (parent) parent.appendChild(e);
   return e;
 }
-function fmtH(h) {
-  var w = Math.floor(h), half = h - w >= 0.5;
-  var s = (w === 0 && half) ? '½' : (w + (half ? '½' : ''));
-  return s + (h <= 1 ? ' hour' : ' hours');
-}
 function fmtN(h) { var w = Math.floor(h), half = h - w >= 0.5; return (w === 0 && half) ? '½' : (w + (half ? '½' : '')); }
-function name(d) { return d.short || d.country; }
+function fmtH(h) { return fmtN(h) + (h <= 1 ? ' hour' : ' hours'); }
+function name(d) { return d.label || d.short || d.country; }
+function fullName(d) { return d.city + ', ' + d.country; }
 function flagSvg(id, h) {
   var a = D.flagAspect[id];
   return '<svg viewBox="0 0 ' + (a * 10) + ' 10" style="height:' + h + 'px;width:' + (a * h) + 'px" aria-hidden="true"><use href="#flag-' + id + '" width="' + (a * 10) + '" height="10"/></svg>';
 }
+function byId(id) { for (var i = 0; i < D.destinations.length; i++) if (D.destinations[i].id === id) return D.destinations[i]; }
+function isBench(d) { return D.benchmarks.indexOf(d.id) >= 0; }
 
 var reduced = false;
 try { reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
 
-var defaults = function () {
-  return { grid: true, bench: true, tz: false, anim: !reduced, speed: 'normal',
+function defaults() {
+  return { grid: false, bench: true, tz: false, anim: !reduced, speed: 'normal',
     visible: D.destinations.reduce(function (o, d) { o[d.id] = true; return o; }, {}) };
-};
+}
 var S = defaults();
-var sel = null;        // selected destination
-var est = 0;           // child's estimate in hours
-var revealed = false;
-var flightT = 0;       // 0..1 progress of the flight line
-var benchT = 1;        // 0..1 progress of benchmark lines
-var animId = 0, benchAnimId = 0;
+var sel = null, est = 0, revealed = false;
+var flightT = 0, benchT = 1, animId = null, benchAnimId = null;
 var results = [];
 
 var svg = $('map'), world = $('world'), linesG = $('lines'), markersG = $('markers'), planeIcon = $('planeIcon');
 var cam = { k: 1, tx: 0, ty: 0 }, fitK = 1, ui = 1;
 var markerEls = {};
 
+/* ---------- flight paths: gently curved like real (great-circle) routes ---------- */
+var RAD = Math.PI / 180, paths = {};
+function vec(lat, lon) { return [Math.cos(lat * RAD) * Math.cos(lon * RAD), Math.cos(lat * RAD) * Math.sin(lon * RAD), Math.sin(lat * RAD)]; }
+function pathFor(d) {
+  if (paths[d.id]) return paths[d.id];
+  var h = D.home, A = vec(h.lat, h.lon), B = vec(d.lat, d.lon), N = 64, pts = [], len = [0];
+  var w = Math.acos(Math.min(1, A[0] * B[0] + A[1] * B[1] + A[2] * B[2])), s = Math.sin(w);
+  for (var i = 0; i <= N; i++) {
+    var t = i / N, lat = h.lat + (d.lat - h.lat) * t, lon = h.lon + (d.lon - h.lon) * t;
+    if (s > 1e-6) {
+      var a = Math.sin((1 - t) * w) / s, b = Math.sin(t * w) / s;
+      var p = [a * A[0] + b * B[0], a * A[1] + b * B[1], a * A[2] + b * B[2]];
+      var glat = Math.asin(p[2]) / RAD, glon = Math.atan2(p[1], p[0]) / RAD;
+      lat += (glat - lat) * BEND; lon += (glon - lon) * BEND;
+    }
+    pts.push([mx(lon), my(lat)]);
+    if (i) len.push(len[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  }
+  return (paths[d.id] = { pts: pts, len: len, total: len[N] });
+}
+// points of the path up to fraction t of its length, plus the direction at the tip
+function partial(d, t) {
+  var P = pathFor(d), target = P.total * t, out = [P.pts[0]], i = 1;
+  while (i < P.pts.length && P.len[i] < target) { out.push(P.pts[i]); i++; }
+  var a = P.pts[Math.max(0, i - 1)], b = P.pts[Math.min(P.pts.length - 1, i)];
+  var seg = P.len[Math.min(P.len.length - 1, i)] - P.len[Math.max(0, i - 1)] || 1;
+  var f = Math.max(0, Math.min(1, (target - P.len[Math.max(0, i - 1)]) / seg));
+  var tip = [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
+  out.push(tip);
+  return { pts: out, tip: tip, dir: Math.atan2(b[1] - a[1], b[0] - a[0]) };
+}
+
 /* ---------- grid ---------- */
 (function buildGrid() {
   var g = $('grid'), step = D.map.gridDeg * U, x, y;
   for (x = 0; x <= MW + 0.1; x += step) el('line', { x1: x, y1: 0, x2: x, y2: MH }, g);
-  // rows line up with home's latitude
-  var y0 = my(D.home.lat) % step;
+  var y0 = my(D.home.lat) % step; // rows line up with home's latitude
   for (y = y0; y <= MH + 0.1; y += step) el('line', { x1: 0, y1: y, x2: MW, y2: y }, g);
-  if (y0 > 0.1) el('line', { x1: 0, y1: 0, x2: MW, y2: 0 }, g);
   var tz = $('tz');
   for (x = 7.5 * U; x < MW; x += 15 * U) el('line', { x1: x, y1: 0, x2: x, y2: MH }, tz);
 })();
@@ -242,7 +288,7 @@ function fit() {
   var s = size();
   fitK = Math.min(s.w / MW, s.h / MH);
   cam.k = fitK; clampCam();
-  ui = Math.max(0.72, Math.min(1.15, Math.min(s.w / 1700, s.h / 640)));
+  ui = Math.max(0.75, Math.min(1.15, Math.min(s.w / 1700, s.h / 640)));
 }
 function zoomAt(sx, sy, f) {
   var k = Math.max(fitK, Math.min(fitK * 14, cam.k * f));
@@ -250,55 +296,53 @@ function zoomAt(sx, sy, f) {
   cam.ty = sy - (sy - cam.ty) * (k / cam.k);
   cam.k = k; clampCam(); render();
 }
-function toS(x, y) { return [cam.tx + x * cam.k, cam.ty + y * cam.k]; }
+function toS(p) { return [cam.tx + p[0] * cam.k, cam.ty + p[1] * cam.k]; }
 
 /* ---------- markers ---------- */
-function isShown(d) { return (S.bench && D.benchmarks.indexOf(d.id) >= 0) || S.visible[d.id]; }
-function badgeH() { return Math.round(34 * ui); }
+function isShown(d) { return (S.bench && isBench(d)) || S.visible[d.id]; }
 
 function buildMarker(d, home) {
-  var H = badgeH(), a = D.flagAspect[d.flag], W = Math.round(H * a);
-  var g = el('g', { 'class': 'marker' + (home ? ' home' : ''), 'data-dest': d.id });
+  var H = Math.round(26 * ui), a = D.flagAspect[d.flag], W = Math.round(H * a);
+  var g = el('g', { 'class': 'marker' + (home ? ' home' : '') + (!home && S.bench && isBench(d) ? ' bm' : ''), 'data-dest': d.id });
   var ox = d.badge[0] * H, oy = d.badge[1] * H;
   if (!home) el('line', { 'class': 'leader', x1: 0, y1: 0, x2: ox, y2: oy }, g);
-  var b = el('g', { 'class': 'badge', transform: 'translate(' + ox + ' ' + oy + ')' }, g);
+  var b = el('g', { transform: 'translate(' + ox + ' ' + oy + ')' }, g);
   var inner = el('g', { 'class': 'badgeInner' }, b);
-  var fs = Math.round(19 * ui), label = home ? 'Lego Airport' : name(d);
-  var hitW = Math.max(W + 16, label.length * fs * 0.6 + 12, 56), hitH = H + fs + 18;
+  var fs = Math.round(16 * ui), label = home ? 'Lego Airport' : name(d);
+  var hitW = Math.max(W + 16, label.length * fs * 0.6 + 12, 56), hitH = H + fs + 16;
   el('use', { href: '#flag-' + d.flag, x: -W / 2, y: -H / 2, width: W, height: H }, inner);
   el('rect', { 'class': 'frame', x: -W / 2, y: -H / 2, width: W, height: H, rx: 2 }, inner);
-  var t = el('text', { 'class': 'lbl', x: 0, y: H / 2 + fs + 2, 'text-anchor': 'middle', 'font-size': fs }, inner);
+  var t = el('text', { 'class': 'lbl', x: 0, y: H / 2 + fs + 1, 'text-anchor': 'middle', 'font-size': fs }, inner);
   t.textContent = label;
-  if (!home && S.bench && D.benchmarks.indexOf(d.id) >= 0) {
-    // benchmark flights carry their time on a label
-    var bt = fmtH(d.hours), bw = bt.length * fs * 0.6 + 20, bh = fs + 12, by = H / 2 + fs + 10;
+  if (!home && S.bench && isBench(d)) {
+    var bt = fmtH(d.hours), bw = bt.length * fs * 0.6 + 18, bh = fs + 10, by = H / 2 + fs + 7;
     var pill = el('g', { 'class': 'benchLabel' }, inner);
     el('rect', { x: -bw / 2, y: by, width: bw, height: bh, rx: bh / 2 }, pill);
-    var tt = el('text', { x: 0, y: by + bh / 2 + fs * 0.36, 'text-anchor': 'middle', 'font-size': fs }, pill);
-    tt.textContent = bt;
-    hitH += bh + 8;
+    el('text', { x: 0, y: by + bh / 2 + fs * 0.36, 'text-anchor': 'middle', 'font-size': fs }, pill).textContent = bt;
+    hitH += bh + 6;
   }
   inner.insertBefore(el('rect', { 'class': 'hit', x: -hitW / 2, y: -H / 2 - 8, width: hitW, height: Math.max(hitH, 56) }), inner.firstChild);
   if (home) {
-    var r = 15 * ui, pts = [];
+    var r = 14 * ui, pts = [];
     for (var i = 0; i < 10; i++) {
-      var ang = (-90 + i * 36) * Math.PI / 180, rr = i % 2 ? r * 0.42 : r;
+      var ang = (-90 + i * 36) * RAD, rr = i % 2 ? r * 0.42 : r;
       pts.push((rr * Math.cos(ang)).toFixed(1) + ',' + (rr * Math.sin(ang)).toFixed(1));
     }
     el('polygon', { points: pts.join(' '), fill: '#ffc83d', stroke: '#07121f', 'stroke-width': 2.5 }, g);
   } else {
-    el('circle', { 'class': 'dot', r: 6 * ui }, g);
-    // make the dot itself easy to tap too
-    el('circle', { 'class': 'hit', r: 24 }, g);
+    el('circle', { 'class': 'dot', r: 5 * ui }, g);
+    el('circle', { 'class': 'hit', r: 22 }, g); // the city dot is easy to tap too
   }
   return g;
 }
-
+function raise() {
+  if (sel && markerEls[sel.id]) markersG.appendChild(markerEls[sel.id]);
+  markersG.appendChild(markerEls.home);
+}
 function buildMarkers(popIds) {
   markersG.textContent = '';
   markerEls = {};
-  var hm = buildMarker(D.home, true);
-  markersG.appendChild(hm); markerEls.home = hm;
+  markerEls.home = markersG.appendChild(buildMarker(D.home, true));
   D.destinations.forEach(function (d) {
     if (!isShown(d)) return;
     var m = buildMarker(d, false);
@@ -306,86 +350,74 @@ function buildMarkers(popIds) {
     if (popIds && popIds.indexOf(d.id) >= 0) m.querySelector('.badgeInner').classList.add('pop');
     markersG.appendChild(m); markerEls[d.id] = m;
   });
-  // the selected one on top
-  if (sel && markerEls[sel.id]) markersG.appendChild(markerEls[sel.id]);
-  markersG.appendChild(markerEls.home);
+  raise();
   positionMarkers();
 }
 function positionMarkers() {
-  var p = toS(mx(D.home.lon), my(D.home.lat));
+  var p = toS([mx(D.home.lon), my(D.home.lat)]);
   markerEls.home.setAttribute('transform', 'translate(' + p[0].toFixed(1) + ' ' + p[1].toFixed(1) + ')');
   D.destinations.forEach(function (d) {
     var m = markerEls[d.id]; if (!m) return;
-    var q = toS(mx(d.lon), my(d.lat));
+    var q = toS([mx(d.lon), my(d.lat)]);
     m.setAttribute('transform', 'translate(' + q[0].toFixed(1) + ' ' + q[1].toFixed(1) + ')');
   });
 }
-function setVisibility(newVis) {
+function setVisibility(change) {
   var before = {};
   D.destinations.forEach(function (d) { before[d.id] = isShown(d); });
-  newVis();
+  change();
   var pop = D.destinations.filter(function (d) { return !before[d.id] && isShown(d); }).map(function (d) { return d.id; });
   if (sel && !isShown(sel)) clearSelection();
   buildMarkers(pop);
-  render();
-  syncTeacher();
+  render(); syncUI();
 }
 
 /* ---------- lines ---------- */
-function byId(id) { for (var i = 0; i < D.destinations.length; i++) if (D.destinations[i].id === id) return D.destinations[i]; }
 function drawLine(d, t, cls) {
-  var hx = mx(D.home.lon), hy = my(D.home.lat), dx = mx(d.lon), dy = my(d.lat);
-  var a = toS(hx, hy), b = toS(hx + (dx - hx) * t, hy + (dy - hy) * t);
-  var pts = { x1: a[0], y1: a[1], x2: b[0], y2: b[1] };
-  el('line', Object.assign({ 'class': 'lineHalo' }, pts), linesG);
-  el('line', Object.assign({ 'class': cls }, pts), linesG);
-  return { a: a, b: b, full: toS(dx, dy) };
+  var P = partial(d, t), pts = P.pts.map(function (p) { var s = toS(p); return s[0].toFixed(1) + ',' + s[1].toFixed(1); }).join(' ');
+  el('polyline', { 'class': 'lineHalo', points: pts }, linesG);
+  el('polyline', { 'class': cls, points: pts }, linesG);
+  return P;
 }
 function renderLines() {
   linesG.textContent = '';
   planeIcon.style.display = 'none';
-  if (S.bench && benchT > 0) {
-    D.benchmarks.forEach(function (id) {
-      drawLine(byId(id), benchT, 'bench');
-    });
-  }
+  if (S.bench && benchT > 0) D.benchmarks.forEach(function (id) { drawLine(byId(id), benchT, 'bench'); });
   if (sel && flightT > 0) {
-    var r = drawLine(sel, flightT, 'flight');
+    var P = drawLine(sel, flightT, 'flight');
     if (S.anim && flightT < 1) {
-      var ang = Math.atan2(r.full[1] - r.a[1], r.full[0] - r.a[0]) * 180 / Math.PI, s = 44 * ui;
+      var tip = toS(P.tip), s = 44 * ui;
       planeIcon.setAttribute('width', s); planeIcon.setAttribute('height', s);
       planeIcon.setAttribute('x', -s / 2); planeIcon.setAttribute('y', -s / 2);
-      planeIcon.setAttribute('transform', 'translate(' + r.b[0] + ' ' + r.b[1] + ') rotate(' + ang + ')');
+      planeIcon.setAttribute('transform', 'translate(' + tip[0].toFixed(1) + ' ' + tip[1].toFixed(1) + ') rotate(' + (P.dir / RAD).toFixed(1) + ')');
       planeIcon.style.display = '';
     }
   }
 }
-
 function render() {
   world.setAttribute('transform', 'matrix(' + cam.k + ' 0 0 ' + cam.k + ' ' + cam.tx + ' ' + cam.ty + ')');
   renderLines();
   positionMarkers();
 }
 
-function animate(setter, durMs, done) {
+function animate(setter, durMs) {
   var start = null, id = {};
   function frame(ts) {
     if (id.stop) return;
     if (start === null) start = ts;
     var t = Math.min(1, (ts - start) / durMs);
+    t = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // ease in and out, like take-off and landing
     setter(t); render();
-    if (t < 1) id.raf = requestAnimationFrame(frame); else if (done) done();
+    if ((ts - start) < durMs) id.raf = requestAnimationFrame(frame);
   }
   id.raf = requestAnimationFrame(frame);
   return id;
 }
 function stopAnim(a) { if (a) { a.stop = true; cancelAnimationFrame(a.raf); } }
-
 function flyTo(d) {
   stopAnim(animId);
   if (!S.anim) { flightT = 1; render(); return; }
-  var len = Math.hypot(mx(d.lon) - mx(D.home.lon), my(d.lat) - my(D.home.lat));
-  var dur = Math.max(900, Math.min(9000, len / SPEEDS[S.speed] * 1000));
+  var dur = Math.max(1000, Math.min(9000, pathFor(d).total / SPEEDS[S.speed] * 1000));
   flightT = 0;
   animId = animate(function (t) { flightT = t; }, dur);
 }
@@ -401,71 +433,70 @@ function select(id) {
   if (id === D.home.id) return;
   sel = byId(id); est = 0; revealed = false;
   Object.keys(markerEls).forEach(function (k) { markerEls[k].classList.toggle('selected', k === id); });
-  if (markerEls[id]) markersG.insertBefore(markerEls[id], markerEls.home);
+  raise();
+  markersG.classList.add('planning');
+  closeDrawers();
   flyTo(sel);
   renderEstimate();
 }
 function clearSelection() {
   stopAnim(animId); sel = null; flightT = 0; revealed = false;
   Object.keys(markerEls).forEach(function (k) { markerEls[k].classList.remove('selected'); });
+  markersG.classList.remove('planning');
   renderEstimate(); render();
 }
 
 var estBox = $('estimate');
+function routeHtml() {
+  return '<div class="route">' + flagSvg('uk', 32) + '<span style="color:var(--amber)">&#9992;&rarr;</span>' +
+    flagSvg(sel.flag, 32) + '<span>' + fullName(sel) + '</span></div>';
+}
 function renderEstimate() {
   if (!sel) {
-    estBox.innerHTML = '<h2>Estimate a flight</h2><p class="prompt">Tap a flag on the map to choose where to fly.</p>' +
-      '<p class="note">Use the dotted lines to compare: Spain takes about 2½ hours, New York about 8 hours.</p>';
+    estBox.innerHTML = '<div class="steps"><span class="s on">1&nbsp; Tap a flag</span><span class="s">2&nbsp; Estimate</span><span class="s">3&nbsp; Reveal</span></div>' +
+      '<span class="note grow">Where shall we fly from the Lego Airport?</span>';
     return;
   }
-  var head = '<div class="route">' + flagSvg('uk', 40) + '<span>Lego Airport</span><span style="color:var(--amber)">&#9992; &rarr;</span>' +
-    flagSvg(sel.flag, 40) + '<span>' + sel.city + ', ' + sel.country + '</span></div>';
   if (!revealed) {
-    estBox.innerHTML = head +
-      '<div class="stepRow"><span class="lab">My estimate:</span>' +
+    estBox.innerHTML = routeHtml() +
+      '<div class="stepper"><span class="lab">My estimate</span>' +
       '<button class="step" id="minus" aria-label="Half an hour less">&minus;</button>' +
       '<span class="estVal" id="estVal"></span>' +
-      '<button class="step" id="plus" aria-label="Half an hour more">+</button>' +
-      '<label class="lab" style="font-size:17px">or type <input id="typed" inputmode="decimal" autocomplete="off" aria-label="Type your estimate in hours"></label>' +
-      '<button class="btn amber" id="revealBtn">REVEAL</button></div>';
+      '<button class="step" id="plus" aria-label="Half an hour more">+</button></div>' +
+      '<label class="typeLab">or type <input id="typed" inputmode="decimal" autocomplete="off" aria-label="Type your estimate in hours"></label>' +
+      '<button class="btn amber" id="revealBtn">REVEAL</button>' +
+      '<button class="btn small" id="cancelBtn" aria-label="Choose a different flag">&times; Change</button>';
     $('minus').onclick = function () { setEst(est - 0.5); };
     $('plus').onclick = function () { setEst(est + 0.5); };
-    $('typed').oninput = function () {
-      var v = parseTyped(this.value);
-      if (v !== null) setEst(v, true);
-    };
+    $('typed').oninput = function () { var v = parseTyped(this.value); if (v !== null) setEst(v, true); };
     $('revealBtn').onclick = reveal;
+    $('cancelBtn').onclick = clearSelection;
     setEst(est);
     return;
   }
-  var real = sel.hours, diff = est - real, big = Math.max(est, real), small = Math.min(est, real), gap = Math.abs(diff);
-  var verdict, cheer;
-  if (gap === 0) { verdict = 'Spot on! Your estimate was exactly right.'; cheer = 'Brilliant estimating!'; }
-  else {
-    verdict = 'Your estimate was ' + (diff < 0 ? 'too short' : 'too long') + ' by ' + fmtH(gap) + '.';
-    cheer = gap <= 1 ? 'So close &ndash; great estimating!' : (gap <= 3 ? 'Good thinking &ndash; well done!' : 'Good try &ndash; now you know for next time!');
-  }
-  estBox.innerHTML = head +
-    '<div class="result"><div class="row" style="margin-top:8px;gap:28px">' +
-    '<div>My estimate: <span class="big">' + fmtH(est) + '</span></div>' +
-    '<div>Real flight: <span class="big" style="color:var(--good)">about ' + fmtH(real) + '</span></div></div>' +
-    (gap === 0 ? '' : '<div class="sum">' + fmtN(big) + ' &minus; ' + fmtN(small) + ' = ' + fmtN(gap) + '</div>') +
-    '<div><b>' + verdict + '</b> ' + cheer + '</div></div>' +
-    '<div class="row" style="justify-content:space-between;margin-top:6px"><p class="note" style="flex:1;min-width:240px;margin:0">Real planes don’t fly in a perfectly straight line on this map, and taking off and landing take extra time &ndash; so the map is just for estimating.</p>' +
-    '<button class="btn amber" id="againBtn">Choose another flag</button></div>';
+  var real = sel.hours, diff = est - real, gap = Math.abs(diff), verdict;
+  if (gap === 0) verdict = '<b>Spot on!</b> Brilliant estimating!';
+  else verdict = '<b>' + (diff < 0 ? 'Too short' : 'Too long') + ' by ' + fmtH(gap) + '.</b> ' +
+    (gap <= 1 ? 'So close &ndash; great estimating!' : gap <= 3 ? 'Good thinking!' : 'Good try &ndash; now you know!');
+  estBox.innerHTML = routeHtml() +
+    '<div class="res grow"><span>My estimate: <span class="big">' + fmtH(est) + '</span></span>' +
+    '<span>Real flight: <span class="big" style="color:var(--good)">about ' + fmtH(real) + '</span></span>' +
+    (gap === 0 ? '' : '<span class="sum">' + fmtN(Math.max(est, real)) + ' &minus; ' + fmtN(Math.min(est, real)) + ' = ' + fmtN(gap) + '</span>') +
+    '<span>' + verdict + '</span>' +
+    '<span class="note" style="flex-basis:100%">Real planes go up, curve round the Earth and come down again, so the map is just for estimating.</span></div>' +
+    '<button class="btn amber" id="againBtn">Next flight</button>';
   $('againBtn').onclick = clearSelection;
 }
 function parseTyped(s) {
   s = String(s).trim().replace(',', '.').replace(/\s*(1\/2|½)/, '.5').replace(/hours?|hrs?|h/i, '').trim();
-  if (s === '' || s === '.5') return s === '.5' ? 0.5 : null;
+  if (s === '') return null;
+  if (s === '.5') return 0.5;
   var v = parseFloat(s);
-  if (isNaN(v)) return null;
-  return v;
+  return isNaN(v) ? null : v;
 }
 function setEst(v, fromTyped) {
   est = Math.max(0, Math.min(40, Math.round(v * 2) / 2));
-  var val = $('estVal');
-  if (val) val.textContent = est === 0 ? '? hours' : fmtH(est);
+  if ($('estVal')) $('estVal').textContent = est === 0 ? '? hours' : fmtH(est);
   if ($('minus')) $('minus').disabled = est <= 0;
   if ($('revealBtn')) $('revealBtn').disabled = est <= 0;
   if (!fromTyped && $('typed')) $('typed').value = '';
@@ -478,35 +509,45 @@ function reveal() {
   saveResults(); renderResults(); renderEstimate();
 }
 
-/* ---------- results ---------- */
-function diffText(r) {
-  var d = r.est - r.real;
-  return d === 0 ? 'spot on' : fmtN(Math.abs(d)) + ' h too ' + (d < 0 ? 'short' : 'long');
+/* ---------- known flights box ---------- */
+function renderKnown() {
+  var k = $('known');
+  k.hidden = !S.bench;
+  k.innerHTML = '<span class="t">Known flights</span>' + D.benchmarks.map(function (id) {
+    var d = byId(id); return '<span class="k">' + flagSvg(d.flag, 22) + name(d) + ' &nbsp;' + fmtH(d.hours) + '</span>';
+  }).join('');
 }
+
+/* ---------- results ---------- */
+function diffText(r) { var d = r.est - r.real; return d === 0 ? 'spot on' : fmtN(Math.abs(d)) + ' h too ' + (d < 0 ? 'short' : 'long'); }
 function renderResults() {
+  $('resCount').textContent = results.length;
   var w = $('tableWrap');
   if (!results.length) { w.innerHTML = '<p class="empty">Your estimates will appear here.</p>'; return; }
-  var h = '<table><thead><tr><th>Country</th><th>My estimate</th><th>Real time</th><th>Difference</th></tr></thead><tbody>';
+  var h = '<table><thead><tr><th>Flight to</th><th>My estimate</th><th>Real time</th><th>Difference</th></tr></thead><tbody>';
   results.slice().reverse().forEach(function (r) {
-    h += '<tr><td>' + flagSvg(r.flag, 18) + ' ' + r.country + '</td><td>' + fmtN(r.est) + ' h</td><td>' + fmtN(r.real) + ' h</td><td>' + diffText(r) + '</td></tr>';
+    h += '<tr><td>' + flagSvg(r.flag, 16) + ' ' + r.country + '</td><td>' + fmtN(r.est) + ' h</td><td>' + fmtN(r.real) + ' h</td><td>' + diffText(r) + '</td></tr>';
   });
   w.innerHTML = h + '</tbody></table>';
 }
 function saveResults() { try { localStorage.setItem(STORE_KEY, JSON.stringify(results)); } catch (e) {} }
 function loadResults() {
-  try { var r = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); if (Array.isArray(r)) results = r.filter(function (x) { return x && x.flag && typeof x.est === 'number'; }); } catch (e) { results = []; }
+  try {
+    var r = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+    if (Array.isArray(r)) results = r.filter(function (x) { return x && D.flagAspect[x.flag] && typeof x.est === 'number'; });
+  } catch (e) { results = []; }
 }
 function resultsText() {
-  return 'Country\tMy estimate\tReal time\tDifference\n' + results.map(function (r) {
+  return 'Flight to\tMy estimate\tReal time\tDifference\n' + results.map(function (r) {
     return r.country + '\t' + fmtN(r.est) + ' h\t' + fmtN(r.real) + ' h\t' + diffText(r);
   }).join('\n');
 }
-function showCopyBox(msg) {
+function showCopyBox() {
   var box = $('copyBox'); box.hidden = false; box.value = resultsText();
   box.focus(); box.select();
   var ok = false;
   try { ok = document.execCommand('copy'); } catch (e) {}
-  $('copyBtn').textContent = ok ? 'Copied!' : (msg || 'Select & copy');
+  $('copyBtn').textContent = ok ? 'Copied!' : 'Select & copy';
 }
 $('copyBtn').onclick = function () {
   if (!results.length) return;
@@ -515,7 +556,7 @@ $('copyBtn').onclick = function () {
     navigator.clipboard.writeText(resultsText()).then(function () {
       btn.textContent = 'Copied!'; $('copyBox').hidden = true;
       setTimeout(function () { btn.textContent = 'Copy'; }, 2000);
-    }, function () { showCopyBox(); });
+    }, showCopyBox);
   } catch (e) { showCopyBox(); }
 };
 var clearArmed = null;
@@ -530,11 +571,20 @@ $('clearBtn').onclick = function () {
   results = []; saveResults(); renderResults(); $('copyBox').hidden = true;
 };
 
+/* ---------- drawers ---------- */
+function openDrawer(id, open) {
+  ['teacher', 'results'].forEach(function (k) {
+    var on = k === id && open;
+    $(k).hidden = !on; $(k + 'Btn').setAttribute('aria-expanded', String(on));
+  });
+}
+function closeDrawers() { openDrawer(null, false); }
+$('teacherBtn').onclick = function () { openDrawer('teacher', $('teacher').hidden); };
+$('resultsBtn').onclick = function () { openDrawer('results', $('results').hidden); };
+$('closeTeacher').onclick = closeDrawers;
+$('closeResults').onclick = closeDrawers;
+
 /* ---------- teacher panel ---------- */
-var teacher = $('teacher');
-function openTeacher(open) { teacher.hidden = !open; $('teacherBtn').setAttribute('aria-expanded', String(open)); }
-$('teacherBtn').onclick = function () { openTeacher(teacher.hidden); };
-$('closeTeacher').onclick = function () { openTeacher(false); };
 $('showAll').onclick = function () { setVisibility(function () { D.destinations.forEach(function (d) { S.visible[d.id] = true; }); }); };
 $('hideAll').onclick = function () { setVisibility(function () { D.destinations.forEach(function (d) { S.visible[d.id] = false; }); }); };
 D.continents.forEach(function (c) {
@@ -546,32 +596,38 @@ D.continents.forEach(function (c) {
     setVisibility(function () { ds.forEach(function (d) { S.visible[d.id] = !allOn; }); });
   };
   $('contBtns').appendChild(b);
+  var head = document.createElement('div');
+  head.className = 'cont'; head.textContent = c;
+  $('countryList').appendChild(head);
+  D.destinations.filter(function (d) { return d.continent === c; }).forEach(function (d) {
+    var l = document.createElement('label');
+    l.className = 'check';
+    l.innerHTML = '<input type="checkbox" data-id="' + d.id + '">' + flagSvg(d.flag, 20) + '<span>' + d.country + (d.label ? ' (' + d.label + ')' : '') + '</span>' +
+      (isBench(d) ? '<span class="tag">benchmark</span>' : '');
+    l.querySelector('input').onchange = function () { var on = this.checked; setVisibility(function () { S.visible[d.id] = on; }); };
+    $('countryList').appendChild(l);
+  });
 });
-D.destinations.forEach(function (d) {
-  var l = document.createElement('label');
-  l.className = 'check';
-  l.innerHTML = '<input type="checkbox" data-id="' + d.id + '">' + flagSvg(d.flag, 22) + '<span>' + d.country + '</span>' +
-    (D.benchmarks.indexOf(d.id) >= 0 ? '<span class="tag">benchmark</span>' : '');
-  l.querySelector('input').onchange = function () {
-    var on = this.checked;
-    setVisibility(function () { S.visible[d.id] = on; });
-  };
-  $('countryList').appendChild(l);
-});
-function setPressed(btn, on) { btn.setAttribute('aria-pressed', String(on)); btn.textContent = on ? 'On' : 'Off'; }
-function syncTeacher() {
+function setPressed(btn, on, txt) { btn.setAttribute('aria-pressed', String(on)); btn.textContent = txt || (on ? 'On' : 'Off'); }
+function syncUI() {
   Array.prototype.forEach.call(document.querySelectorAll('#countryList input'), function (cb) {
-    var id = cb.getAttribute('data-id'), locked = S.bench && D.benchmarks.indexOf(id) >= 0;
-    cb.checked = locked || S.visible[id]; cb.disabled = locked;
+    var d = byId(cb.getAttribute('data-id')), locked = S.bench && isBench(d);
+    cb.checked = locked || S.visible[d.id]; cb.disabled = locked;
   });
   setPressed($('tGrid'), S.grid); setPressed($('tBench'), S.bench); setPressed($('tAnim'), S.anim); setPressed($('tTz'), S.tz);
+  $('squaresBtn').setAttribute('aria-pressed', String(S.grid));
+  $('squaresTxt').textContent = S.grid ? 'Hide squares' : 'Show squares';
+  $('key').hidden = !S.grid;
   Array.prototype.forEach.call(document.querySelectorAll('#speedSeg button'), function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-speed') === S.speed)); });
   $('grid').style.display = S.grid ? '' : 'none';
   $('tz').style.display = S.tz ? '' : 'none';
   document.body.classList.toggle('anim', S.anim);
+  renderKnown();
 }
-$('tGrid').onclick = function () { S.grid = !S.grid; syncTeacher(); };
-$('tTz').onclick = function () { S.tz = !S.tz; syncTeacher(); };
+function toggleGrid() { S.grid = !S.grid; syncUI(); }
+$('tGrid').onclick = toggleGrid;
+$('squaresBtn').onclick = toggleGrid;
+$('tTz').onclick = function () { S.tz = !S.tz; syncUI(); };
 $('tBench').onclick = function () {
   setVisibility(function () { S.bench = !S.bench; });
   if (S.bench) drawBenchmarks();
@@ -579,15 +635,16 @@ $('tBench').onclick = function () {
 $('tAnim').onclick = function () {
   S.anim = !S.anim;
   if (!S.anim) { stopAnim(animId); stopAnim(benchAnimId); if (sel) flightT = 1; benchT = 1; render(); }
-  syncTeacher();
+  syncUI();
 };
 Array.prototype.forEach.call(document.querySelectorAll('#speedSeg button'), function (b) {
-  b.onclick = function () { S.speed = b.getAttribute('data-speed'); syncTeacher(); };
+  b.onclick = function () { S.speed = b.getAttribute('data-speed'); syncUI(); };
 });
 $('resetAll').onclick = function () {
   stopAnim(animId); stopAnim(benchAnimId);
-  S = defaults(); sel = null; flightT = 0; revealed = false; benchT = 1;
-  fit(); buildMarkers(); renderEstimate(); render(); syncTeacher();
+  S = defaults(); benchT = 1;
+  clearSelection();
+  fit(); buildMarkers(); render(); syncUI();
 };
 
 /* ---------- zoom & pan (touch, mouse, pen) ---------- */
@@ -629,10 +686,9 @@ svg.addEventListener('pointermove', function (e) {
     var a = list[0], b = list[1];
     var dist = Math.hypot(a[0] - b[0], a[1] - b[1]), mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
     var k = Math.max(fitK, Math.min(fitK * 14, gesture.k * dist / gesture.dist));
-    cam.k = k;
     cam.tx = mid[0] - (gesture.mid[0] - gesture.tx) * (k / gesture.k);
     cam.ty = mid[1] - (gesture.mid[1] - gesture.ty) * (k / gesture.k);
-    clampCam(); render();
+    cam.k = k; clampCam(); render();
   }
 });
 function endPtr(e) {
@@ -648,15 +704,11 @@ function endPtr(e) {
     }
   }
   if (ptrList().length === 0) gesture = null;
-  else if (gesture && gesture.type === 'pinch') {
-    var rest = ptrList()[0];
-    gesture = { type: 'pan', start: rest, tx: cam.tx, ty: cam.ty, moved: true, target: null };
-  }
+  else if (gesture && gesture.type === 'pinch') gesture = { type: 'pan', start: ptrList()[0], tx: cam.tx, ty: cam.ty, moved: true, target: null };
 }
 svg.addEventListener('pointerup', endPtr);
 svg.addEventListener('pointercancel', endPtr);
-// stop iOS Safari's own pinch-zoom of the page
-document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+document.addEventListener('gesturestart', function (e) { e.preventDefault(); }); // stop iOS page pinch-zoom
 
 var resizeT, lastSize = '';
 function onResize() {
@@ -665,7 +717,7 @@ function onResize() {
     var s = size(), key = Math.round(s.w) + 'x' + Math.round(s.h);
     if (key === lastSize) return;
     lastSize = key;
-    var oldFit = fitK, rel = cam.k / oldFit;
+    var rel = cam.k / fitK;
     fit();
     if (rel > 1.01) { var c = centre(); zoomAt(c[0], c[1], rel); }
     buildMarkers(); render();
@@ -678,13 +730,13 @@ try { new ResizeObserver(onResize).observe($('mapWrap')); } catch (e) {}
 loadResults();
 fit();
 lastSize = Math.round(size().w) + 'x' + Math.round(size().h);
-syncTeacher();
+syncUI();
 buildMarkers(S.anim ? D.destinations.map(function (d) { return d.id; }) : null);
 renderEstimate();
 renderResults();
 render();
 if (S.anim) drawBenchmarks();
-window.__fe = { S: function () { return S; }, cam: cam, select: select, est: function () { return est; } }; // for tests
+window.__fe = { S: function () { return S; }, cam: cam }; // used by test.js
 })();
 </script>
 </body>

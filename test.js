@@ -20,14 +20,17 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     await page.screenshot({ path: out(vp.name + '-1-start.png') });
     check(errors.length === 0, `${vp.name}: no console errors ${errors.join(' | ')}`);
     const markers = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')));
-    check(markers.length === 14, `${vp.name}: 13 flags + home shown (${markers.length})`);
+    check(markers.length === 24, `${vp.name}: 23 flags + home shown (${markers.length})`);
+    check(await page.$eval('#grid', e => getComputedStyle(e).display) === 'none', `${vp.name}: grid hidden at start`);
+    check(/Spain/.test(await page.textContent('#known')) && /8 hours/.test(await page.textContent('#known')), `${vp.name}: known flights always on display`);
 
     // tap a flag (Japan), estimate, reveal
     const jp = await page.$('[data-dest="jp"] .badgeInner use');
     await jp.click();
     await page.waitForTimeout(800);
     await page.screenshot({ path: out(vp.name + '-2-flying.png') });
-    check(await page.isVisible('#estVal'), `${vp.name}: stepper visible after tapping flag`);
+    check(await page.isVisible('#estVal') && /Tokyo/.test(await page.textContent('#estimate')), `${vp.name}: stepper visible after tapping Japan`);
+    check(await page.$eval('#markers', e => e.classList.contains('planning')), `${vp.name}: other flags step back while planning`);
     for (let i = 0; i < 20; i++) await page.click('#plus');
     await page.click('#minus');
     check(await page.textContent('#estVal') === '9½ hours', `${vp.name}: stepper shows 9½ hours`);
@@ -35,9 +38,16 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     await page.click('#revealBtn');
     await page.waitForTimeout(300);
     const res = await page.textContent('#estimate');
-    check(/14 − 9½ = 4½/.test(res) && /too short by 4½ hours/.test(res), `${vp.name}: reveal shows subtraction and wording`);
+    check(/14 − 9½ = 4½/.test(res) && /Too short by 4½ hours/.test(res), `${vp.name}: reveal shows subtraction and wording`);
     check((await page.$$('#tableWrap tbody tr')).length === 1, `${vp.name}: result added to board`);
     await page.screenshot({ path: out(vp.name + '-3-reveal.png') });
+    await page.click('#squaresBtn');
+    check(await page.$eval('#grid', e => getComputedStyle(e).display) !== 'none' && await page.isVisible('#key'), `${vp.name}: Show squares button reveals grid`);
+    await page.screenshot({ path: out(vp.name + '-3b-squares.png') });
+    await page.click('#squaresBtn');
+    await page.click('#resultsBtn');
+    await page.screenshot({ path: out(vp.name + '-3c-results.png') });
+    await page.click('#closeResults');
 
     // typed entry
     await page.click('#againBtn');
@@ -82,12 +92,12 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     await page.click('#teacherBtn');
     await page.click('#hideAll');
     let shown = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')).sort());
-    check(JSON.stringify(shown) === JSON.stringify(['es', 'uk', 'us']), `${vp.name}: hide all keeps home + benchmarks (${shown})`);
+    check(JSON.stringify(shown) === JSON.stringify(['es', 'uk', 'us'].sort()), `${vp.name}: hide all keeps home + benchmarks (${shown})`);
     await page.screenshot({ path: out(vp.name + '-5-teacher.png') });
     await page.click('#tBench');
     shown = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')));
     check(shown.length === 1 && (await page.$$('#lines .bench')).length === 0, `${vp.name}: benchmarks off removes lines and flags`);
-    const ids = ['ie', 'fr', 'es', 'us', 'ca', 'br', 'za', 'eg', 'ae', 'in', 'cn', 'jp', 'au'];
+    const ids = require('./data.json').destinations.map(d => d.id);
     for (const id of ids) {
       await page.check(`#countryList input[data-id="${id}"]`);
       const on = await page.$(`#markers [data-dest="${id}"]`);
@@ -97,11 +107,11 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     }
     await page.click('[data-cont="Asia"]');
     shown = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')).sort());
-    check(JSON.stringify(shown) === JSON.stringify(['ae', 'cn', 'in', 'jp', 'uk']), `${vp.name}: continent button (${shown})`);
+    check(JSON.stringify(shown) === JSON.stringify(['ae', 'cn', 'in', 'jp', 'kr', 'sg', 'th', 'uk']), `${vp.name}: continent button (${shown})`);
     await page.click('#showAll'); await page.click('#tBench');
-    check((await page.$$('#markers [data-dest]')).length === 14, `${vp.name}: show all`);
+    check((await page.$$('#markers [data-dest]')).length === 24, `${vp.name}: show all`);
     await page.click('#tGrid');
-    check(await page.$eval('#grid', e => getComputedStyle(e).display) === 'none', `${vp.name}: grid toggles off`);
+    check(await page.$eval('#grid', e => getComputedStyle(e).display) !== 'none', `${vp.name}: teacher grid toggle on`);
     await page.click('#tGrid');
 
     // animations fully off

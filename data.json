@@ -1,5 +1,5 @@
 {
-  "_readme": "Shared data for the World Map Flight Estimator. Edit this file, then run: node build.js. hours = typical UK flight time, rounded to the nearest half hour. badge = where the flag sits relative to the city dot, in flag-heights (x right, y down). utcOffset = standard time, stored for a later time-zone lesson (unused for now).",
+  "_readme": "Shared data for the World Map Flight Estimator. Edit this file, then run: node build.js. hours = typical UK flight time, rounded to the nearest half hour. badge = where the flag sits relative to the city dot, in flag-heights (x right, y down). label = optional map label (used when a country has more than one city). utcOffset = standard time, stored for a later time-zone lesson (unused for now).",
   "map": {
     "lonMin": -180,
     "lonMax": 180,
@@ -46,10 +46,25 @@
       "hours": 1.5,
       "utcOffset": 0,
       "badge": [
-        -2.4,
-        -1
+        -3,
+        -1.5
       ],
       "check": "About 1h 15m to 1h 25m gate to gate, so 1 or 1½."
+    },
+    {
+      "id": "es",
+      "country": "Spain",
+      "city": "Madrid",
+      "lat": 40.42,
+      "lon": -3.7,
+      "continent": "Europe",
+      "flag": "es",
+      "hours": 2.5,
+      "utcOffset": 1,
+      "badge": [
+        -2.3,
+        -0.3
+      ]
     },
     {
       "id": "fr",
@@ -68,34 +83,37 @@
       "check": "About 1h 15m gate to gate, so 1 or 1½."
     },
     {
-      "id": "es",
-      "country": "Spain",
-      "city": "Madrid",
-      "lat": 40.42,
-      "lon": -3.7,
-      "continent": "Europe",
-      "flag": "es",
-      "hours": 2.5,
-      "utcOffset": 1,
+      "id": "us-la",
+      "country": "USA",
+      "label": "Los Angeles",
+      "city": "Los Angeles",
+      "lat": 34.05,
+      "lon": -118.24,
+      "continent": "North America",
+      "flag": "us",
+      "hours": 11,
+      "utcOffset": -8,
       "badge": [
-        -2,
-        1
+        0,
+        1.4
       ]
     },
     {
-      "id": "us",
+      "id": "us-mia",
       "country": "USA",
-      "city": "New York",
-      "lat": 40.71,
-      "lon": -74.01,
+      "label": "Miami",
+      "city": "Miami",
+      "lat": 25.76,
+      "lon": -80.19,
       "continent": "North America",
       "flag": "us",
-      "hours": 8,
+      "hours": 10,
       "utcOffset": -5,
       "badge": [
-        1.6,
-        1.3
-      ]
+        -0.6,
+        1.4
+      ],
+      "check": "Non-stop is about 9h 45m, so 9½ or 10."
     },
     {
       "id": "ca",
@@ -113,6 +131,54 @@
       ]
     },
     {
+      "id": "us",
+      "country": "USA",
+      "city": "New York",
+      "lat": 40.71,
+      "lon": -74.01,
+      "continent": "North America",
+      "flag": "us",
+      "hours": 8,
+      "utcOffset": -5,
+      "badge": [
+        1.6,
+        1.3
+      ],
+      "label": "New York"
+    },
+    {
+      "id": "co",
+      "country": "Colombia",
+      "city": "Bogotá",
+      "lat": 4.71,
+      "lon": -74.07,
+      "continent": "South America",
+      "flag": "co",
+      "hours": 11,
+      "utcOffset": -5,
+      "badge": [
+        -1.7,
+        0.4
+      ],
+      "check": "British Airways non-stop is about 10h 45m, so 10½ or 11."
+    },
+    {
+      "id": "ar",
+      "country": "Argentina",
+      "city": "Buenos Aires",
+      "lat": -34.6,
+      "lon": -58.38,
+      "continent": "South America",
+      "flag": "ar",
+      "hours": 14,
+      "utcOffset": -3,
+      "badge": [
+        -1.7,
+        0.9
+      ],
+      "check": "Non-stop is about 13h 45m to 14h."
+    },
+    {
       "id": "br",
       "country": "Brazil",
       "city": "Rio de Janeiro",
@@ -123,10 +189,40 @@
       "hours": 12,
       "utcOffset": -3,
       "badge": [
-        0,
-        1.4
+        1.6,
+        0.4
       ],
       "check": "Non-stop is about 11h 45m."
+    },
+    {
+      "id": "ma",
+      "country": "Morocco",
+      "city": "Marrakech",
+      "lat": 31.63,
+      "lon": -8.01,
+      "continent": "Africa",
+      "flag": "ma",
+      "hours": 3.5,
+      "utcOffset": 1,
+      "badge": [
+        0.4,
+        1.4
+      ]
+    },
+    {
+      "id": "ng",
+      "country": "Nigeria",
+      "city": "Lagos",
+      "lat": 6.52,
+      "lon": 3.38,
+      "continent": "Africa",
+      "flag": "ng",
+      "hours": 6.5,
+      "utcOffset": 1,
+      "badge": [
+        0,
+        1.4
+      ]
     },
     {
       "id": "za",
@@ -154,8 +250,23 @@
       "hours": 5,
       "utcOffset": 2,
       "badge": [
-        -0.6,
-        1.3
+        -0.9,
+        1.2
+      ]
+    },
+    {
+      "id": "ke",
+      "country": "Kenya",
+      "city": "Nairobi",
+      "lat": -1.29,
+      "lon": 36.82,
+      "continent": "Africa",
+      "flag": "ke",
+      "hours": 8.5,
+      "utcOffset": 3,
+      "badge": [
+        1.5,
+        0.6
       ]
     },
     {
@@ -170,7 +281,7 @@
       "hours": 7,
       "utcOffset": 4,
       "badge": [
-        0,
+        0.3,
         1.3
       ]
     },
@@ -185,10 +296,41 @@
       "hours": 9,
       "utcOffset": 5.5,
       "badge": [
-        0.4,
-        -1.5
+        -0.3,
+        -1.6
       ],
       "check": "About 8h 45m to 9h 30m depending on the route."
+    },
+    {
+      "id": "th",
+      "country": "Thailand",
+      "city": "Bangkok",
+      "lat": 13.76,
+      "lon": 100.5,
+      "continent": "Asia",
+      "flag": "th",
+      "hours": 11.5,
+      "utcOffset": 7,
+      "badge": [
+        -1.8,
+        0.2
+      ],
+      "check": "About 11h 30m to 12h non-stop."
+    },
+    {
+      "id": "sg",
+      "country": "Singapore",
+      "city": "Singapore",
+      "lat": 1.35,
+      "lon": 103.82,
+      "continent": "Asia",
+      "flag": "sg",
+      "hours": 13,
+      "utcOffset": 8,
+      "badge": [
+        0.6,
+        1.4
+      ]
     },
     {
       "id": "cn",
@@ -201,10 +343,26 @@
       "hours": 10.5,
       "utcOffset": 8,
       "badge": [
-        0,
-        -1.5
+        -0.9,
+        -1.6
       ],
       "check": "About 10h 30m on Chinese airlines; longer on UK airlines that avoid Russian airspace."
+    },
+    {
+      "id": "kr",
+      "country": "South Korea",
+      "city": "Seoul",
+      "lat": 37.57,
+      "lon": 126.98,
+      "continent": "Asia",
+      "flag": "kr",
+      "hours": 14,
+      "utcOffset": 9,
+      "badge": [
+        0.1,
+        1.4
+      ],
+      "check": "About 14h now (routes avoid Russian airspace); it was about 11h 30m before 2022."
     },
     {
       "id": "jp",
@@ -217,8 +375,8 @@
       "hours": 14,
       "utcOffset": 9,
       "badge": [
-        0.3,
-        -1.5
+        0.9,
+        -1.6
       ],
       "check": "About 14h now (routes avoid Russian airspace); it was about 12h before 2022."
     },
@@ -295,6 +453,38 @@
     "au": {
       "viewBox": "0 0 10080 5040",
       "svg": "<clipPath id=\"au-b\"><path d=\"M0 0h6v3H0z\"/></clipPath><clipPath id=\"au-c\"><path d=\"M0 0v1.5h6V3zm6 0H3v3H0z\"/></clipPath><path fill=\"#012169\" d=\"M0 0h10080v5040H0z\"/><path d=\"M0 0l6 3m0-3L0 3\" stroke=\"#fff\" stroke-width=\".6\" clip-path=\"url(#au-b)\" transform=\"scale(840)\"/><path d=\"M0 0l6 3m0-3L0 3\" stroke=\"#E4002B\" stroke-width=\".4\" clip-path=\"url(#au-c)\" transform=\"scale(840)\"/><path d=\"M2520 0v2520M0 1260h5040\" stroke=\"#fff\" stroke-width=\"840\"/><path d=\"M2520 0v2520M0 1260h5040\" stroke=\"#E4002B\" stroke-width=\"504\"/><g fill=\"#fff\"><path transform=\"translate(2520,3780) scale(2.1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(7560,4200) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(6300,2205) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(7560,840) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(8680,1869) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(8064,2730)\" d=\"M0-210L54.86-75.508l144.862 10.614L88.765 28.842l34.67 141.052L0 93.334l-123.435 76.56 34.67-141.052-110.957-93.736L-54.86-75.508z\"/></g>"
+    },
+    "ke": {
+      "viewBox": "-120 -80 240 160",
+      "svg": "<defs><path id=\"ke-spearshape\" d=\"M -1,55.4256258422040733928782829281879157421699 h 2 V -38 C 3,-40 3,-43 3,-46 C 3,-48 3,-56 0,-64.6632301492380856250246634162192350325315 C -3,-56 -3,-48 -3,-46 C -3,-43 -3,-40 -1,-38 z\" stroke-miterlimit=\"10\" transform=\"rotate(30)\"/></defs><rect x=\"-120\" y=\"-80\" width=\"240\" height=\"160\" fill=\"#fff\"/><rect x=\"-120\" y=\"-80\" width=\"240\" height=\"48\"/><rect x=\"-120\" y=\"32\" width=\"240\" height=\"48\" fill=\"#060\"/><g id=\"ke-spear\"><use href=\"#ke-spearshape\" stroke=\"#000\"/><use href=\"#ke-spearshape\" fill=\"#fff\"/></g><use href=\"#ke-spear\" transform=\"scale(-1,1)\"/><path fill=\"#b00\" d=\"M -120,-24 V 24 H -19 c 3,8 13,24 19,24 s 16,-16 19,-24 H 120 V -24 H 19 c -3,-8 -13,-24 -19,-24 s -16,16 -19,24 z\"/><path id=\"ke-deco_r\" d=\"M 19,24 c 3,-8 5,-16 5,-24 s -2,-16 -5,-24 c -3,8 -5,16 -5,24 s 2,16 5,24\"/><use href=\"#ke-deco_r\" transform=\"scale(-1,1)\"/><g fill=\"#fff\"><ellipse rx=\"4\" ry=\"6\"/><path id=\"ke-deco_br\" d=\"M 1,5.85 c 0,0 4,8 4,21 s -4,21 -4,21 z\"/><use href=\"#ke-deco_br\" transform=\"scale(-1)\"/><use href=\"#ke-deco_br\" transform=\"scale(-1,1)\"/><use href=\"#ke-deco_br\" transform=\"scale(1,-1)\"/></g>"
+    },
+    "ng": {
+      "viewBox": "0 0 6 3",
+      "svg": "<rect width=\"6\" height=\"3\" fill=\"#008751\"/><rect x=\"2\" width=\"2\" height=\"3\" fill=\"#FFF\"/>"
+    },
+    "co": {
+      "viewBox": "0 0 6 4",
+      "svg": "<rect fill=\"#CE1126\" width=\"6\" height=\"4\"/><rect fill=\"#003893\" width=\"6\" height=\"3\"/><rect fill=\"#FCD116\" width=\"6\" height=\"2\"/>"
+    },
+    "th": {
+      "viewBox": "0 0 900 600",
+      "svg": "<rect fill=\"#A51931\" width=\"900\" height=\"600\"/><rect fill=\"#F4F5F8\" y=\"100\" width=\"900\" height=\"400\"/><rect fill=\"#2D2A4A\" y=\"200\" width=\"900\" height=\"200\"/>"
+    },
+    "sg": {
+      "viewBox": "0 0 4320 2880",
+      "svg": "<rect fill=\"#ed2939\" width=\"4320\" height=\"1440\"/><rect fill=\"#fff\" y=\"1440\" width=\"4320\" height=\"1440\"/><path fill=\"#fff\" d=\"M 1481.678,720 A 541.5,541.5 0 1 1 398.67798,720 A 541.5,541.5 0 1 1 1481.678,720 z\"/><path fill=\"#ed2939\" d=\"M 1651.835,720 A 511.73499,511.73499 0 1 1 628.36499,720 A 511.73499,511.73499 0 1 1 1651.835,720 z\"/><path fill=\"#fff\" id=\"sg-star\" d=\"M 1007.1951,733.06439 L 933.63466,676.63425 L 860.09279,733.09117 L 888.40587,642.09687 L 814.61147,586.0053 L 905.6704,586.1981 L 933.6049,495.07467 L 961.56934,586.18798 L 1052.6282,585.96246 L 978.8522,642.0808 L 1007.1951,733.06439 z\"/><use href=\"#sg-star\" transform=\"translate(577.18853,0)\"/><use href=\"#sg-star\" transform=\"translate(288.88853,-214.21117)\"/><use href=\"#sg-star\" transform=\"translate(107.99953,342.74883)\"/><use href=\"#sg-star\" transform=\"translate(469.18853,342.74883)\"/>"
+    },
+    "kr": {
+      "viewBox": "-36 -24 72 48",
+      "svg": "<path fill=\"#fff\" d=\"M-36-24h72v48h-72z\"/><g transform=\"rotate(-56.31)\"><g id=\"kr-b\"><path id=\"kr-a\" d=\"M-6-25H6m-12 3H6m-12 3H6\" stroke=\"#000\" stroke-width=\"2\"/><use href=\"#kr-a\" y=\"44\"/></g><path stroke=\"#fff\" d=\"M0 17v10\"/><circle fill=\"#cd2e3a\" r=\"12\"/><path fill=\"#0047a0\" d=\"M0-12A6 6 0 000 0a6 6 0 010 12 12 12 0 010-24z\"/></g><g transform=\"rotate(-123.69)\"><use href=\"#kr-b\"/><path stroke=\"#fff\" d=\"M0-23.5v3M0 17v3.5m0 3v3\"/></g>"
+    },
+    "ma": {
+      "viewBox": "0 0 900 600",
+      "svg": "<rect width=\"900\" height=\"600\" fill=\"#C1272D\"/><path d=\"M450 224.3l-44.5 136.9 116.4-84.6H378.1l116.4 84.6z\" fill=\"none\" stroke=\"#006233\" stroke-width=\"14.6\" stroke-linejoin=\"miter\"/>"
+    },
+    "ar": {
+      "viewBox": "0 0 800 500",
+      "svg": "<rect width=\"800\" height=\"500\" fill=\"#74ACDF\"/><rect y=\"166.67\" width=\"800\" height=\"166.67\" fill=\"#fff\"/><g fill=\"#F6B40E\" stroke=\"#85340A\" stroke-width=\"1.5\"><polygon points=\"419.9,248.2 452.0,250.0 419.9,251.8\"/><polygon points=\"419.9,252.1 443.2,258.6 419.2,255.6\"/><polygon points=\"419.1,256.0 448.0,269.9 417.7,259.3\"/><polygon points=\"417.6,259.6 436.6,274.4 415.6,262.6\"/><polygon points=\"415.4,262.8 436.8,286.8 412.8,265.4\"/><polygon points=\"412.6,265.6 424.4,286.6 409.6,267.6\"/><polygon points=\"409.3,267.7 419.9,298.0 406.0,269.1\"/><polygon points=\"405.6,269.2 408.6,293.2 402.1,269.9\"/><polygon points=\"401.8,269.9 400.0,302.0 398.2,269.9\"/><polygon points=\"397.9,269.9 391.4,293.2 394.4,269.2\"/><polygon points=\"394.0,269.1 380.1,298.0 390.7,267.7\"/><polygon points=\"390.4,267.6 375.6,286.6 387.4,265.6\"/><polygon points=\"387.2,265.4 363.2,286.8 384.6,262.8\"/><polygon points=\"384.4,262.6 363.4,274.4 382.4,259.6\"/><polygon points=\"382.3,259.3 352.0,269.9 380.9,256.0\"/><polygon points=\"380.8,255.6 356.8,258.6 380.1,252.1\"/><polygon points=\"380.1,251.8 348.0,250.0 380.1,248.2\"/><polygon points=\"380.1,247.9 356.8,241.4 380.8,244.4\"/><polygon points=\"380.9,244.0 352.0,230.1 382.3,240.7\"/><polygon points=\"382.4,240.4 363.4,225.6 384.4,237.4\"/><polygon points=\"384.6,237.2 363.2,213.2 387.2,234.6\"/><polygon points=\"387.4,234.4 375.6,213.4 390.4,232.4\"/><polygon points=\"390.7,232.3 380.1,202.0 394.0,230.9\"/><polygon points=\"394.4,230.8 391.4,206.8 397.9,230.1\"/><polygon points=\"398.2,230.1 400.0,198.0 401.8,230.1\"/><polygon points=\"402.1,230.1 408.6,206.8 405.6,230.8\"/><polygon points=\"406.0,230.9 419.9,202.0 409.3,232.3\"/><polygon points=\"409.6,232.4 424.4,213.4 412.6,234.4\"/><polygon points=\"412.8,234.6 436.8,213.2 415.4,237.2\"/><polygon points=\"415.6,237.4 436.6,225.6 417.6,240.4\"/><polygon points=\"417.7,240.7 448.0,230.1 419.1,244.0\"/><polygon points=\"419.2,244.4 443.2,241.4 419.9,247.9\"/><circle cx=\"400\" cy=\"250\" r=\"23\"/></g>"
     }
   }
 }

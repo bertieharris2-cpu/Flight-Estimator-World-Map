@@ -9,8 +9,15 @@ Open **`world-map-estimator.html`**. It is one file, works offline, and needs no
 - **Whiteboard:** double-click the file, or drag it into Chrome or Edge.
 - **iPad:** save the file into *Documents by Readdle* (or the Files app), then tap it to open.
 
-How it works: tap a flag. A dotted line draws from the Lego Airport. Set an estimate with **−** and **+** (half-hour steps), or type one, then tap **REVEAL**.
-The **Teacher** button (top right) has flag filters, grid, benchmark flights, animations (on/off and plane speed) and reset.
+How it works:
+1. Tap a flag. The route curves out from the Lego Airport, and the other flags fade so the route is easy to see.
+2. Set an estimate with **−** and **+** (half-hour steps), or type one.
+3. Tap **REVEAL** to see the real time and how far out the estimate was.
+
+- **Known flights** (Spain 2½ hours, New York 8 hours) are always shown under the map.
+- The grid starts **hidden**, so children make a ballpark estimate first. **Show squares** (bottom left of the map) brings it back: 1 square ≈ 1 hour.
+- **Results** (top right) lists estimates, with Copy and Clear.
+- **Teacher** has flag filters, grid, benchmark flights, animations (on/off and plane speed) and reset.
 
 ## Changing the data
 
