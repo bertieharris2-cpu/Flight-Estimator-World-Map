@@ -38,7 +38,7 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     await page.click('#revealBtn');
     await page.waitForTimeout(300);
     const res = await page.textContent('#estimate');
-    check(/14 − 9½ = 4½/.test(res) && /Too short by 4½ hours/.test(res), `${vp.name}: reveal shows subtraction and wording`);
+    check(/My estimate\s*9½ hours/.test(res) && /Real flight\s*about 14 hours/.test(res) && !/−|=/.test(res), `${vp.name}: reveal shows just estimate and real time`);
     check((await page.$$('#tableWrap tbody tr')).length === 1, `${vp.name}: result added to board`);
     await page.screenshot({ path: out(vp.name + '-3-reveal.png') });
     await page.click('#squaresBtn');
@@ -48,6 +48,16 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     await page.click('#resultsBtn');
     await page.screenshot({ path: out(vp.name + '-3c-results.png') });
     await page.click('#closeResults');
+    // explainer: step through all scenes
+    await page.click('#whyBtn');
+    check(await page.isVisible('#explain'), `${vp.name}: "Why is it tricky?" opens the explainer`);
+    for (let i = 1; i <= 5; i++) {
+      await page.waitForTimeout(vp.name === 'whiteboard' ? 7200 : 300);
+      if (vp.name !== 'ipad-portrait' || i === 3) await page.screenshot({ path: out(`${vp.name}-6-explain-${i}.png`) });
+      check(await page.textContent('#exNo') === `${i} of 5`, `${vp.name}: explainer step ${i}`);
+      await page.click('#exNext');
+    }
+    check(!(await page.isVisible('#explain')), `${vp.name}: Finish closes the explainer`);
 
     // typed entry
     await page.click('#againBtn');

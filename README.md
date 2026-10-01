@@ -12,10 +12,11 @@ Open **`world-map-estimator.html`**. It is one file, works offline, and needs no
 How it works:
 1. Tap a flag. The route curves out from the Lego Airport, and the other flags fade so the route is easy to see.
 2. Set an estimate with **−** and **+** (half-hour steps), or type one.
-3. Tap **REVEAL** to see the real time and how far out the estimate was.
+3. Tap **REVEAL** to see the estimate next to the real flight time.
 
 - **Known flights** (Egypt 5 hours, New York 8 hours) are always shown under the map. Egypt replaced Spain as the short yardstick: short flights spend so much time taking off and landing that Spain looks like 1½ squares but takes 2½ hours.
 - The grid starts **hidden**, so children make a ballpark estimate first. **Show squares** (bottom left of the map) brings it back: 1 square ≈ 1 hour.
+- **How it works** (top right, and *Why is it tricky?* after each Reveal) plays a short 5-step animation: 1 square ≈ 1 hour, counting squares along the line, why real routes curve, why take-off and landing add time, and why "close is great".
 - **Results** (top right) lists estimates, with Copy and Clear.
 - **Teacher** has flag filters, grid, benchmark flights, animations (on/off and plane speed) and reset.
 

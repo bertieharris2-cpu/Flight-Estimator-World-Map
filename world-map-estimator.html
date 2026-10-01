@@ -85,7 +85,13 @@ header h1 { font-family: var(--mono); color: var(--amber); font-size: clamp(22px
 #revealBtn { min-height: 68px; font-size: 28px; padding: 0 26px; font-family: var(--mono); letter-spacing: 1px; }
 .res { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 22px; font-size: clamp(19px, 1.5vw, 26px); }
 .res .big { font-weight: 700; }
-.res .sum { font-family: var(--mono); color: var(--amber); font-weight: 700; font-size: clamp(24px, 2vw, 34px); }
+.tiles { display: flex; gap: 12px; }
+.tile { display: flex; flex-direction: column; align-items: center; padding: 6px 22px; border-radius: 14px; background: #07121f; border: 3px solid #fff; }
+.tile.real { border-color: var(--good); }
+.tile .tl { font-size: 16px; color: var(--muted); text-transform: uppercase; font-family: var(--mono); font-weight: 700; }
+.tile .tv { font-size: clamp(24px, 2vw, 36px); font-weight: 700; white-space: nowrap; }
+.tile.real .tv { color: var(--good); }
+.cheer { font-size: clamp(20px, 1.6vw, 26px); font-weight: 700; max-width: 300px; }
 .note { font-size: 15px; color: var(--muted); }
 .grow { flex: 1; }
 
@@ -115,11 +121,24 @@ td svg { height: 16px; border: 1px solid #fff; vertical-align: -2px; }
   .step { width: 60px; height: 60px; font-size: 34px; }
   #revealBtn { min-height: 60px; font-size: 24px; }
 }
+#explain { position: fixed; inset: 0; z-index: 20; background: rgba(4,10,18,.93); display: flex; align-items: center; justify-content: center; padding: 12px; }
+#explain[hidden] { display: none; }
+.exBox { width: min(1200px, 100%); max-height: 100%; overflow-y: auto; background: var(--panel); border: 3px solid var(--amber); border-radius: 18px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.exHead { display: flex; align-items: center; gap: 14px; }
+.exHead h2 { flex: 1; margin: 0; font-family: var(--mono); color: var(--amber); font-size: clamp(24px, 2.6vw, 40px); }
+.exNo { font-family: var(--mono); font-weight: 700; font-size: 22px; background: var(--amber); color: #07121f; border-radius: 30px; padding: 4px 14px; white-space: nowrap; }
+#exSvg { width: 100%; height: auto; max-height: 58vh; display: block; background: #07121f; border-radius: 12px; }
+#exText { margin: 0; font-size: clamp(20px, 1.9vw, 30px); line-height: 1.35; }
+.exNav { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+#exDots { flex: 1; display: flex; gap: 10px; justify-content: center; }
+#exDots span { width: 16px; height: 16px; border-radius: 50%; background: var(--line); }
+#exDots span.on { background: var(--amber); }
 </style>
 </head>
 <body>
 <header>
   <h1>&#9992; Flight Estimator</h1>
+  <button class="btn" id="howBtn">How it works</button>
   <button class="btn" id="resultsBtn" aria-expanded="false">Results<span class="count" id="resCount">0</span></button>
   <button class="btn" id="teacherBtn" aria-expanded="false">Teacher</button>
 </header>
@@ -207,6 +226,15 @@ td svg { height: 16px; border: 1px solid #fff; vertical-align: -2px; }
 <div id="bar">
   <div id="known" aria-label="Known flights"></div>
   <section id="estimate" aria-live="polite"></section>
+</div>
+
+<div id="explain" hidden role="dialog" aria-modal="true" aria-label="How estimating works">
+  <div class="exBox">
+    <div class="exHead"><span class="exNo" id="exNo"></span><h2 id="exTitle"></h2><button class="btn small" id="exClose">Close</button></div>
+    <svg id="exSvg" viewBox="0 0 1000 460" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+    <p id="exText"></p>
+    <div class="exNav"><button class="btn" id="exBack">&#9664; Back</button><div id="exDots"></div><button class="btn" id="exReplay">&#8635; Play again</button><button class="btn amber" id="exNext">Next &#9654;</button></div>
+  </div>
 </div>
 
 <script>
@@ -468,8 +496,8 @@ function clearSelection() {
 }
 
 var estBox = $('estimate');
-function routeHtml() {
-  return '<div class="route">' + flagSvg('uk', 32) + '<span style="color:var(--amber)">&#9992;&rarr;</span>' +
+function routeHtml(short) {
+  return '<div class="route">' + (short ? '' : flagSvg('uk', 32) + '<span style="color:var(--amber)">&#9992;&rarr;</span>') +
     flagSvg(sel.flag, 32) + '<span>' + fullName(sel) + '</span></div>';
 }
 function renderEstimate() {
@@ -495,18 +523,16 @@ function renderEstimate() {
     setEst(est);
     return;
   }
-  var real = sel.hours, diff = est - real, gap = Math.abs(diff), verdict;
-  if (gap === 0) verdict = '<b>Spot on!</b> Brilliant estimating!';
-  else verdict = '<b>' + (diff < 0 ? 'Too short' : 'Too long') + ' by ' + fmtH(gap) + '.</b> ' +
-    (gap <= 1 ? 'So close &ndash; great estimating!' : gap <= 3 ? 'Good thinking!' : 'Good try &ndash; now you know!');
-  estBox.innerHTML = routeHtml() +
-    '<div class="res grow"><span>My estimate: <span class="big">' + fmtH(est) + '</span></span>' +
-    '<span>Real flight: <span class="big" style="color:var(--good)">about ' + fmtH(real) + '</span></span>' +
-    (gap === 0 ? '' : '<span class="sum">' + fmtN(Math.max(est, real)) + ' &minus; ' + fmtN(Math.min(est, real)) + ' = ' + fmtN(gap) + '</span>') +
-    '<span>' + verdict + '</span>' +
-    '<span class="note" style="flex-basis:100%">Real planes go up, curve round the Earth and come down again, so the map is just for estimating.</span></div>' +
+  var real = sel.hours, gap = Math.abs(est - real);
+  var cheer = gap === 0 ? 'Spot on!' : gap <= 1 ? 'So close &ndash; great estimating!' : 'Good estimating!';
+  estBox.innerHTML = routeHtml(true) +
+    '<div class="tiles"><div class="tile"><span class="tl">My estimate</span><span class="tv">' + fmtH(est) + '</span></div>' +
+    '<div class="tile real"><span class="tl">Real flight</span><span class="tv">about ' + fmtH(real) + '</span></div></div>' +
+    '<div class="cheer grow">' + cheer + '</div>' +
+    '<button class="btn" id="whyBtn">Why is it tricky? &#9654;</button>' +
     '<button class="btn amber" id="againBtn">Next flight</button>';
   $('againBtn').onclick = clearSelection;
+  $('whyBtn').onclick = function () { openExplainer(); };
 }
 function parseTyped(s) {
   s = String(s).trim().replace(',', '.').replace(/\s*(1\/2|½)/, '.5').replace(/hours?|hrs?|h/i, '').trim();
@@ -541,14 +567,13 @@ function renderKnown() {
 }
 
 /* ---------- results ---------- */
-function diffText(r) { var d = r.est - r.real; return d === 0 ? 'spot on' : fmtN(Math.abs(d)) + ' h too ' + (d < 0 ? 'short' : 'long'); }
 function renderResults() {
   $('resCount').textContent = results.length;
   var w = $('tableWrap');
   if (!results.length) { w.innerHTML = '<p class="empty">Your estimates will appear here.</p>'; return; }
-  var h = '<table><thead><tr><th>Flight to</th><th>My estimate</th><th>Real time</th><th>Difference</th></tr></thead><tbody>';
+  var h = '<table><thead><tr><th>Flight to</th><th>My estimate</th><th>Real flight</th></tr></thead><tbody>';
   results.slice().reverse().forEach(function (r) {
-    h += '<tr><td>' + flagSvg(r.flag, 16) + ' ' + r.country + '</td><td>' + fmtN(r.est) + ' h</td><td>' + fmtN(r.real) + ' h</td><td>' + diffText(r) + '</td></tr>';
+    h += '<tr><td>' + flagSvg(r.flag, 16) + ' ' + r.country + '</td><td>' + fmtN(r.est) + ' h</td><td>' + fmtN(r.real) + ' h</td></tr>';
   });
   w.innerHTML = h + '</tbody></table>';
 }
@@ -560,8 +585,8 @@ function loadResults() {
   } catch (e) { results = []; }
 }
 function resultsText() {
-  return 'Flight to\tMy estimate\tReal time\tDifference\n' + results.map(function (r) {
-    return r.country + '\t' + fmtN(r.est) + ' h\t' + fmtN(r.real) + ' h\t' + diffText(r);
+  return 'Flight to\tMy estimate\tReal flight\n' + results.map(function (r) {
+    return r.country + '\t' + fmtN(r.est) + ' h\t' + fmtN(r.real) + ' h';
   }).join('\n');
 }
 function showCopyBox() {
@@ -747,6 +772,186 @@ function onResize() {
 }
 window.addEventListener('resize', onResize);
 try { new ResizeObserver(onResize).observe($('mapWrap')); } catch (e) {}
+
+/* ---------- "How it works" explainer: why squares only give an estimate ---------- */
+var exSvg = $('exSvg'), EX = { i: 0, anim: null };
+var C = 80, GX = 60, GY = 30, COLS = 11, ROWS = 5;
+function exT(g, x, y, s, size, fill, anchor) {
+  var t = el('text', { x: x, y: y, 'font-size': size || 28, fill: fill || '#fff', 'font-weight': 700, 'text-anchor': anchor || 'middle', 'font-family': 'system-ui, Arial, sans-serif' }, g);
+  t.textContent = s; return t;
+}
+function exGrid(g) {
+  el('rect', { x: GX, y: GY, width: COLS * C, height: ROWS * C, fill: '#0b2340', rx: 6 }, g);
+  for (var i = 0; i <= COLS; i++) el('line', { x1: GX + i * C, y1: GY, x2: GX + i * C, y2: GY + ROWS * C, stroke: '#ffc83d', 'stroke-opacity': .45, 'stroke-width': 2 }, g);
+  for (var j = 0; j <= ROWS; j++) el('line', { x1: GX, y1: GY + j * C, x2: GX + COLS * C, y2: GY + j * C, stroke: '#ffc83d', 'stroke-opacity': .45, 'stroke-width': 2 }, g);
+}
+function exPlane(g, x, y, deg) { el('use', { href: '#plane', x: -26, y: -26, width: 52, height: 52, transform: 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + deg.toFixed(1) + ')' }, g); }
+function exStar(g, x, y) {
+  var pts = [];
+  for (var i = 0; i < 10; i++) { var a = (-90 + i * 36) * RAD, r = i % 2 ? 9 : 22; pts.push((x + r * Math.cos(a)).toFixed(1) + ',' + (y + r * Math.sin(a)).toFixed(1)); }
+  el('polygon', { points: pts.join(' '), fill: '#ffc83d', stroke: '#07121f', 'stroke-width': 3 }, g);
+}
+function exFlag(g, id, x, y, h) {
+  var w = h * D.flagAspect[id];
+  el('use', { href: '#flag-' + id, x: x - w / 2, y: y - h / 2, width: w, height: h }, g);
+  el('rect', { x: x - w / 2, y: y - h / 2, width: w, height: h, fill: 'none', stroke: '#fff', 'stroke-width': 2 }, g);
+}
+function exCounter(g, s, fill) {
+  var w = s.length * 19 + 40;
+  el('rect', { x: GX + COLS * C - w - 12, y: GY + 12, width: w, height: 56, rx: 28, fill: '#07121f', stroke: fill || '#ffc83d', 'stroke-width': 3 }, g);
+  exT(g, GX + COLS * C - 12 - w / 2, GY + 50, s, 30, fill || '#ffc83d');
+}
+// a path as a list of points, with helpers to walk along it
+function exPath(pts) {
+  var len = [0];
+  for (var i = 1; i < pts.length; i++) len.push(len[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  return { pts: pts, len: len, total: len[len.length - 1] };
+}
+function exAt(P, d) {
+  var i = 1;
+  while (i < P.pts.length - 1 && P.len[i] < d) i++;
+  var a = P.pts[i - 1], b = P.pts[i], f = Math.max(0, Math.min(1, (d - P.len[i - 1]) / ((P.len[i] - P.len[i - 1]) || 1)));
+  return { x: a[0] + (b[0] - a[0]) * f, y: a[1] + (b[1] - a[1]) * f, deg: Math.atan2(b[1] - a[1], b[0] - a[0]) / RAD };
+}
+function exUpTo(P, d) {
+  var out = [];
+  for (var i = 0; i < P.pts.length && P.len[i] <= d; i++) out.push(P.pts[i]);
+  var p = exAt(P, d); out.push([p.x, p.y]);
+  return out.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' ');
+}
+function exLine(g, P, d, colour, width) {
+  el('polyline', { points: exUpTo(P, d), fill: 'none', stroke: 'rgba(7,18,31,.6)', 'stroke-width': width + 6, 'stroke-linecap': 'round' }, g);
+  el('polyline', { points: exUpTo(P, d), fill: 'none', stroke: colour, 'stroke-width': width, 'stroke-dasharray': '3 12', 'stroke-linecap': 'round' }, g);
+}
+function exTicks(g, P, d, fill) { // a numbered dot after every square-sized step
+  for (var k = 1; k * C <= Math.min(d, P.total) + 0.5; k++) {
+    var p = exAt(P, k * C);
+    el('circle', { cx: p.x, cy: p.y, r: 17, fill: fill, stroke: '#07121f', 'stroke-width': 3 }, g);
+    exT(g, p.x, p.y + 7, String(k), 20, '#07121f');
+  }
+}
+var A = [GX + 0.5 * C, GY + 3.5 * C], B = [GX + 8.5 * C, GY + 1.5 * C];
+var straight = exPath([A, B]);
+var curve = exPath((function () {
+  var q = [(A[0] + B[0]) / 2 - 20, (A[1] + B[1]) / 2 - 170], out = [];
+  for (var i = 0; i <= 80; i++) { var t = i / 80, u = 1 - t; out.push([u * u * A[0] + 2 * u * t * q[0] + t * t * B[0], u * u * A[1] + 2 * u * t * q[1] + t * t * B[1]]); }
+  return out;
+})());
+function exEnds(g) { exStar(g, A[0], A[1]); exT(g, A[0], A[1] + 46, 'Lego Airport', 22, '#ffc83d'); el('line', { x1: B[0], y1: B[1], x2: B[0] + 30, y2: B[1] - 34, stroke: '#fff', 'stroke-width': 2 }, g); exFlag(g, 'us', B[0] + 50, B[1] - 46, 40); el('circle', { cx: B[0], cy: B[1], r: 7, fill: '#fff', stroke: '#07121f', 'stroke-width': 2 }, g); }
+function halfSq(L) { return Math.round(L / C * 2) / 2; }
+
+var SCENES = [
+  { title: '1 square ≈ 1 hour', dur: 5000,
+    text: 'On our map, flying across <b>one square</b> takes about <b>one hour</b>.',
+    draw: function (g, t) {
+      exGrid(g);
+      var y = GY + 2.5 * C, x = GX + t * 6 * C, n = Math.min(6, Math.floor((x - GX) / C + 0.001));
+      for (var i = 0; i < n; i++) {
+        el('rect', { x: GX + i * C + 3, y: GY + 2 * C + 3, width: C - 6, height: C - 6, fill: 'rgba(255,200,61,.35)', rx: 4 }, g);
+        exT(g, GX + i * C + C / 2, GY + 2 * C + C - 12, (i + 1) + ' h', 20, '#ffc83d');
+      }
+      exPlane(g, Math.max(GX + 26, x), y - 6, 0);
+      exCounter(g, n === 1 ? '1 hour' : n + ' hours');
+    } },
+  { title: 'Count the squares', dur: 6000,
+    text: 'Draw a line from the Lego Airport to the city. Count <b>square-sized steps</b> along the line: about 8 steps &asymp; about 8 hours.',
+    draw: function (g, t) {
+      exGrid(g); exEnds(g);
+      var d = straight.total * t;
+      exLine(g, straight, d, '#fff', 5);
+      exTicks(g, straight, d, '#fff');
+      var p = exAt(straight, d); if (t < 1) exPlane(g, p.x, p.y, p.deg);
+      exCounter(g, 'about ' + fmtN(halfSq(Math.min(d, straight.total))) + ' squares', '#fff');
+    } },
+  { title: 'Real planes fly a curve', dur: 6500,
+    text: 'The Earth is round like a ball, so the quickest way looks <b>curved</b> on a flat map. The curve is a little bit longer than the straight line.',
+    draw: function (g, t) {
+      exGrid(g);
+      el('polyline', { points: exUpTo(straight, straight.total), fill: 'none', stroke: '#fff', 'stroke-opacity': .5, 'stroke-width': 4, 'stroke-dasharray': '3 12', 'stroke-linecap': 'round' }, g);
+      exEnds(g);
+      var d = curve.total * t;
+      exLine(g, curve, d, '#ffc83d', 6);
+      exTicks(g, curve, d, '#ffc83d');
+      var p = exAt(curve, d); if (t < 1) exPlane(g, p.x, p.y, p.deg);
+      exCounter(g, t < 1 ? 'curve: ' + fmtN(halfSq(d)) + ' squares' : 'curve: about ' + fmtN(halfSq(curve.total)) + ' squares');
+      if (t >= 1) exT(g, (A[0] + B[0]) / 2 + 40, (A[1] + B[1]) / 2 + 60, 'straight: about ' + fmtN(halfSq(straight.total)), 24, '#fff');
+    } },
+  { title: 'Take-off and landing', dur: 7000,
+    text: 'Planes go <b>slowly</b> when they take off, climb and land. That adds a little extra time &ndash; it makes the biggest difference on <b>short</b> flights.',
+    draw: function (g, t) {
+      el('rect', { x: GX, y: GY, width: COLS * C, height: ROWS * C, fill: '#0b2340', rx: 6 }, g);
+      el('rect', { x: GX, y: 380, width: COLS * C, height: 50, fill: '#3d6b55' }, g);
+      el('rect', { x: GX + 10, y: 372, width: 190, height: 10, fill: '#9aa7b4' }, g);
+      el('rect', { x: GX + COLS * C - 200, y: 372, width: 190, height: 10, fill: '#9aa7b4' }, g);
+      var pts = [[100, 362], [210, 362], [400, 120], [600, 120], [790, 362], [900, 362]];
+      var slow = [1.6, 1.8, 1, 1.8, 1.6]; // relative time for each part of the flight
+      var tot = slow.reduce(function (a, b) { return a + b; }, 0), acc = 0, seg = 0, f = 1;
+      for (seg = 0; seg < 5; seg++) { if (t * tot <= acc + slow[seg] || seg === 4) { f = Math.min(1, (t * tot - acc) / slow[seg]); break; } acc += slow[seg]; }
+      var a = pts[seg], b = pts[seg + 1], x = a[0] + (b[0] - a[0]) * f, y = a[1] + (b[1] - a[1]) * f;
+      var trail = pts.slice(0, seg + 1).concat([[x, y]]).map(function (q) { return q.join(','); }).join(' ');
+      el('polyline', { points: trail, fill: 'none', stroke: '#ffc83d', 'stroke-width': 5, 'stroke-dasharray': '3 12', 'stroke-linecap': 'round' }, g);
+      var labels = [['Take off', 160, 418], ['Climb', 270, 230], ['Cruise – fast!', 500, 170], ['Down', 730, 230], ['Land', 845, 418]];
+      for (var i = 0; i <= seg && i < labels.length; i++) { exT(g, labels[i][1], labels[i][2], labels[i][0], 26, i === 2 ? '#7ee0a1' : '#ffc83d'); }
+      exPlane(g, x, y - 4, Math.atan2(b[1] - a[1], b[0] - a[0]) / RAD);
+      if (t >= 1) exCounter(g, '+ a little extra time');
+    } },
+  { title: 'Close is great!', dur: 5500,
+    text: 'The squares give a <b>good estimate</b>, not the exact answer. If you are within about <b>an hour</b>, that is brilliant estimating!',
+    draw: function (g, t) {
+      el('rect', { x: GX, y: GY, width: COLS * C, height: ROWS * C, fill: '#0b2340', rx: 6 }, g);
+      var x0 = 110, px = 780 / 12, ly = 270, xh = function (h) { return x0 + h * px; };
+      var band = Math.min(1, t / 0.35);
+      el('rect', { x: xh(8 - band), y: ly - 70, width: 2 * band * px, height: 140, fill: 'rgba(126,224,161,.25)', stroke: '#7ee0a1', 'stroke-width': 2, rx: 10 }, g);
+      el('line', { x1: xh(0), y1: ly, x2: xh(12), y2: ly, stroke: '#fff', 'stroke-width': 4 }, g);
+      for (var h = 0; h <= 12; h++) {
+        el('line', { x1: xh(h), y1: ly - 10, x2: xh(h), y2: ly + 10, stroke: '#fff', 'stroke-width': 3 }, g);
+        exT(g, xh(h), ly + 42, String(h), 22, '#a9bdd3');
+      }
+      exT(g, xh(12) + 40, ly + 42, 'hours', 20, '#a9bdd3', 'start');
+      el('polygon', { points: xh(8) + ',' + (ly - 14) + ' ' + (xh(8) - 14) + ',' + (ly - 40) + ' ' + (xh(8) + 14) + ',' + (ly - 40), fill: '#7ee0a1' }, g);
+      exT(g, xh(8), ly - 90, 'Real flight: 8 hours', 26, '#7ee0a1');
+      if (band >= 1) exT(g, xh(8), ly + 140, 'Within an hour = great estimate!', 26, '#7ee0a1');
+      [[7.5, 0.5], [9, 0.75]].forEach(function (e) {
+        if (t < e[1]) return;
+        el('circle', { cx: xh(e[0]), cy: ly, r: 16, fill: '#ffc83d', stroke: '#07121f', 'stroke-width': 3 }, g);
+        exT(g, xh(e[0]), ly + 6, '✓', 20, '#07121f');
+        exT(g, xh(e[0]), ly + 80, fmtN(e[0]), 24, '#ffc83d');
+      });
+    } }
+];
+function exAnimate(draw, dur) {
+  var id = {}, start = null;
+  function frame(ts) {
+    if (id.stop) return;
+    if (start === null) start = ts;
+    var t = Math.min(1, (ts - start) / dur);
+    draw(t);
+    if (t < 1) id.raf = requestAnimationFrame(frame);
+  }
+  id.raf = requestAnimationFrame(frame);
+  return id;
+}
+function exDraw(t) { exSvg.textContent = ''; SCENES[EX.i].draw(exSvg, t); }
+function showStep() {
+  stopAnim(EX.anim);
+  var sc = SCENES[EX.i];
+  $('exNo').textContent = (EX.i + 1) + ' of ' + SCENES.length;
+  $('exTitle').textContent = sc.title;
+  $('exText').innerHTML = sc.text;
+  $('exDots').innerHTML = SCENES.map(function (s, i) { return '<span' + (i === EX.i ? ' class="on"' : '') + '></span>'; }).join('');
+  $('exBack').disabled = EX.i === 0;
+  $('exNext').innerHTML = EX.i === SCENES.length - 1 ? 'Finish' : 'Next &#9654;';
+  $('exReplay').hidden = !S.anim;
+  if (S.anim) EX.anim = exAnimate(exDraw, sc.dur); else exDraw(1);
+}
+function openExplainer() { EX.i = 0; closeDrawers(); $('explain').hidden = false; showStep(); $('exNext').focus(); }
+function closeExplainer() { stopAnim(EX.anim); $('explain').hidden = true; }
+$('howBtn').onclick = openExplainer;
+$('exClose').onclick = closeExplainer;
+$('exBack').onclick = function () { if (EX.i > 0) { EX.i--; showStep(); } };
+$('exNext').onclick = function () { if (EX.i < SCENES.length - 1) { EX.i++; showStep(); } else closeExplainer(); };
+$('exReplay').onclick = showStep;
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('explain').hidden) closeExplainer(); });
 
 /* ---------- start ---------- */
 loadResults();
