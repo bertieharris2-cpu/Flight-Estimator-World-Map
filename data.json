@@ -1,0 +1,300 @@
+{
+  "_readme": "Shared data for the World Map Flight Estimator. Edit this file, then run: node build.js. hours = typical UK flight time, rounded to the nearest half hour. badge = where the flag sits relative to the city dot, in flag-heights (x right, y down). utcOffset = standard time, stored for a later time-zone lesson (unused for now).",
+  "map": {
+    "lonMin": -180,
+    "lonMax": 180,
+    "latMax": 79,
+    "latMin": -56,
+    "gridDeg": 9,
+    "gridNote": "1 square = 9 degrees = about 1000 km = about 1 hour of flying"
+  },
+  "home": {
+    "id": "uk",
+    "country": "United Kingdom",
+    "city": "Lego Airport",
+    "lat": 52,
+    "lon": -2,
+    "flag": "uk",
+    "continent": "Europe",
+    "utcOffset": 0,
+    "badge": [
+      0,
+      -1.75
+    ]
+  },
+  "benchmarks": [
+    "es",
+    "us"
+  ],
+  "continents": [
+    "Europe",
+    "North America",
+    "South America",
+    "Africa",
+    "Asia",
+    "Oceania"
+  ],
+  "destinations": [
+    {
+      "id": "ie",
+      "country": "Ireland",
+      "city": "Dublin",
+      "lat": 53.35,
+      "lon": -6.26,
+      "continent": "Europe",
+      "flag": "ie",
+      "hours": 1.5,
+      "utcOffset": 0,
+      "badge": [
+        -2.4,
+        -1
+      ],
+      "check": "About 1h 15m to 1h 25m gate to gate, so 1 or 1½."
+    },
+    {
+      "id": "fr",
+      "country": "France",
+      "city": "Paris",
+      "lat": 48.86,
+      "lon": 2.35,
+      "continent": "Europe",
+      "flag": "fr",
+      "hours": 1.5,
+      "utcOffset": 1,
+      "badge": [
+        2.2,
+        0.3
+      ],
+      "check": "About 1h 15m gate to gate, so 1 or 1½."
+    },
+    {
+      "id": "es",
+      "country": "Spain",
+      "city": "Madrid",
+      "lat": 40.42,
+      "lon": -3.7,
+      "continent": "Europe",
+      "flag": "es",
+      "hours": 2.5,
+      "utcOffset": 1,
+      "badge": [
+        -2,
+        1
+      ]
+    },
+    {
+      "id": "us",
+      "country": "USA",
+      "city": "New York",
+      "lat": 40.71,
+      "lon": -74.01,
+      "continent": "North America",
+      "flag": "us",
+      "hours": 8,
+      "utcOffset": -5,
+      "badge": [
+        1.6,
+        1.3
+      ]
+    },
+    {
+      "id": "ca",
+      "country": "Canada",
+      "city": "Toronto",
+      "lat": 43.65,
+      "lon": -79.38,
+      "continent": "North America",
+      "flag": "ca",
+      "hours": 8,
+      "utcOffset": -5,
+      "badge": [
+        -1.2,
+        -1.7
+      ]
+    },
+    {
+      "id": "br",
+      "country": "Brazil",
+      "city": "Rio de Janeiro",
+      "lat": -22.91,
+      "lon": -43.17,
+      "continent": "South America",
+      "flag": "br",
+      "hours": 12,
+      "utcOffset": -3,
+      "badge": [
+        0,
+        1.4
+      ],
+      "check": "Non-stop is about 11h 45m."
+    },
+    {
+      "id": "za",
+      "country": "South Africa",
+      "city": "Cape Town",
+      "lat": -33.92,
+      "lon": 18.42,
+      "continent": "Africa",
+      "flag": "za",
+      "hours": 11.5,
+      "utcOffset": 2,
+      "badge": [
+        0,
+        1.4
+      ]
+    },
+    {
+      "id": "eg",
+      "country": "Egypt",
+      "city": "Cairo",
+      "lat": 30.04,
+      "lon": 31.24,
+      "continent": "Africa",
+      "flag": "eg",
+      "hours": 5,
+      "utcOffset": 2,
+      "badge": [
+        -0.6,
+        1.3
+      ]
+    },
+    {
+      "id": "ae",
+      "country": "United Arab Emirates",
+      "short": "UAE",
+      "city": "Dubai",
+      "lat": 25.2,
+      "lon": 55.27,
+      "continent": "Asia",
+      "flag": "ae",
+      "hours": 7,
+      "utcOffset": 4,
+      "badge": [
+        0,
+        1.3
+      ]
+    },
+    {
+      "id": "in",
+      "country": "India",
+      "city": "Delhi",
+      "lat": 28.61,
+      "lon": 77.21,
+      "continent": "Asia",
+      "flag": "in",
+      "hours": 9,
+      "utcOffset": 5.5,
+      "badge": [
+        0.4,
+        -1.5
+      ],
+      "check": "About 8h 45m to 9h 30m depending on the route."
+    },
+    {
+      "id": "cn",
+      "country": "China",
+      "city": "Beijing",
+      "lat": 39.9,
+      "lon": 116.4,
+      "continent": "Asia",
+      "flag": "cn",
+      "hours": 10.5,
+      "utcOffset": 8,
+      "badge": [
+        0,
+        -1.5
+      ],
+      "check": "About 10h 30m on Chinese airlines; longer on UK airlines that avoid Russian airspace."
+    },
+    {
+      "id": "jp",
+      "country": "Japan",
+      "city": "Tokyo",
+      "lat": 35.68,
+      "lon": 139.69,
+      "continent": "Asia",
+      "flag": "jp",
+      "hours": 14,
+      "utcOffset": 9,
+      "badge": [
+        0.3,
+        -1.5
+      ],
+      "check": "About 14h now (routes avoid Russian airspace); it was about 12h before 2022."
+    },
+    {
+      "id": "au",
+      "country": "Australia",
+      "city": "Sydney",
+      "lat": -33.87,
+      "lon": 151.21,
+      "continent": "Oceania",
+      "flag": "au",
+      "hours": 22,
+      "utcOffset": 10,
+      "badge": [
+        -0.4,
+        1.4
+      ],
+      "check": "One-stop (e.g. via Singapore or Dubai), about 22h including the stop."
+    }
+  ],
+  "flags": {
+    "uk": {
+      "viewBox": "0 0 60 30",
+      "svg": "<clipPath id=\"uk-a\"><path d=\"M0 0v30h60V0z\"/></clipPath><clipPath id=\"uk-b\"><path d=\"M30 15h30v15zv15H0zH0V0zV0h30z\"/></clipPath><g clip-path=\"url(#uk-a)\"><path d=\"M0 0v30h60V0z\" fill=\"#012169\"/><path d=\"M0 0l60 30m0-30L0 30\" stroke=\"#fff\" stroke-width=\"6\"/><path d=\"M0 0l60 30m0-30L0 30\" clip-path=\"url(#uk-b)\" stroke=\"#C8102E\" stroke-width=\"4\"/><path d=\"M30 0v30M0 15h60\" stroke=\"#fff\" stroke-width=\"10\"/><path d=\"M30 0v30M0 15h60\" stroke=\"#C8102E\" stroke-width=\"6\"/></g>"
+    },
+    "ie": {
+      "viewBox": "0 0 6 3",
+      "svg": "<path fill=\"#169B62\" d=\"M0 0h2v3H0z\"/><path fill=\"#fff\" d=\"M2 0h2v3H2z\"/><path fill=\"#FF883E\" d=\"M4 0h2v3H4z\"/>"
+    },
+    "fr": {
+      "viewBox": "0 0 3 2",
+      "svg": "<path fill=\"#ED2939\" d=\"M0 0h3v2H0z\"/><path fill=\"#fff\" d=\"M0 0h2v2H0z\"/><path fill=\"#002395\" d=\"M0 0h1v2H0z\"/>"
+    },
+    "es": {
+      "viewBox": "0 0 750 500",
+      "svg": "<path fill=\"#AA151B\" d=\"M0 0h750v500H0z\"/><path fill=\"#F1BF00\" d=\"M0 125h750v250H0z\"/><g stroke=\"#7a5c00\" stroke-width=\"3\"><path fill=\"#ccc\" d=\"M182 200h18v130h-18zM300 200h18v130h-18z\"/><path fill=\"#c8b100\" d=\"M176 190h30v12h-30zM294 190h30v12h-30zM176 328h30v12h-30zM294 328h30v12h-30z\"/><path fill=\"#c8b100\" d=\"M212 186l8-30 15 18 15-28 15 28 15-18 8 30z\"/><path fill=\"#AA151B\" d=\"M210 190h80v85c0 30-18 50-40 50s-40-20-40-50z\"/><path fill=\"#c8b100\" d=\"M250 190h40v62h-40z\"/><path fill=\"#AA151B\" d=\"M250 252h40v23c0 30-18 50-40 50z\" opacity=\".9\"/></g>"
+    },
+    "us": {
+      "viewBox": "0 0 7410 3900",
+      "svg": "<rect width=\"7410\" height=\"3900\" fill=\"#B22234\"/><path d=\"M0,450H7410m0,600H0m0,600H7410m0,600H0m0,600H7410m0,600H0\" stroke=\"#fff\" stroke-width=\"300\"/><rect width=\"2964\" height=\"2100\" fill=\"#3C3B6E\"/><g fill=\"#fff\"><g id=\"us-s18\"><g id=\"us-s9\"><g id=\"us-s5\"><g id=\"us-s4\"><path id=\"us-s\" d=\"M247,90 317.534230,307.082039 132.873218,172.917961H361.126782L176.465770,307.082039z\"/><use href=\"#us-s\" y=\"420\"/><use href=\"#us-s\" y=\"840\"/><use href=\"#us-s\" y=\"1260\"/></g><use href=\"#us-s\" y=\"1680\"/></g><use href=\"#us-s4\" x=\"247\" y=\"210\"/></g><use href=\"#us-s9\" x=\"494\"/></g><use href=\"#us-s18\" x=\"988\"/><use href=\"#us-s9\" x=\"1976\"/><use href=\"#us-s5\" x=\"2470\"/></g>"
+    },
+    "ca": {
+      "viewBox": "0 0 9600 4800",
+      "svg": "<path fill=\"#D52B1E\" d=\"M0 0h2400l99 99h4602l99-99h2400v4800H7200l-99-99H2499l-99 99H0z\"/><path fill=\"#fff\" d=\"M2400 0h4800v4800H2400zm2490 4430l-45-863a95 95 0 01111-98l859 151-116-320a65 65 0 0120-73l941-762-212-99a65 65 0 01-34-79l186-572-542 115a65 65 0 01-73-38l-105-247-423 454a65 65 0 01-111-57l204-1052-327 189a65 65 0 01-91-27l-332-652-332 652a65 65 0 01-91 27l-327-189 204 1052a65 65 0 01-111 57l-423-454-105 247a65 65 0 01-73 38l-542-115 186 572a65 65 0 01-34 79l-212 99 941 762a65 65 0 0120 73l-116 320 859-151a95 95 0 01111 98l-45 863z\"/>"
+    },
+    "br": {
+      "viewBox": "-2100 -1470 4200 2940",
+      "svg": "<rect x=\"-2100\" y=\"-1470\" width=\"4200\" height=\"2940\" fill=\"#009B3A\"/><path d=\"m-1743 0 1743 1113 1743-1113-1743-1113z\" fill=\"#FEDF00\"/><circle r=\"735\" fill=\"#002776\"/><clipPath id=\"br-band\"><circle r=\"735\"/></clipPath><path fill=\"#fff\" d=\"m-2205 1470a1785 1785 0 0 1 3570 0h-105a1680 1680 0 1 0 -3360 0z\" clip-path=\"url(#br-band)\"/><g fill=\"#fff\"><polygon points=\"-600.00,-176.80 -589.94,-145.85 -557.39,-145.84 -583.72,-126.71 -573.67,-95.76 -600.00,-114.89 -626.33,-95.76 -616.28,-126.71 -642.61,-145.84 -610.06,-145.85\"/><polygon points=\"-535.00,132.20 -524.94,163.15 -492.39,163.16 -518.72,182.29 -508.67,213.24 -535.00,194.11 -561.33,213.24 -551.28,182.29 -577.61,163.16 -545.06,163.15\"/><polygon points=\"-625.00,206.60 -616.83,231.75 -590.38,231.75 -611.78,247.30 -603.60,272.45 -625.00,256.90 -646.40,272.45 -638.22,247.30 -659.62,231.75 -633.17,231.75\"/><polygon points=\"-382.00,213.60 -373.83,238.75 -347.38,238.75 -368.78,254.30 -360.60,279.45 -382.00,263.90 -403.40,279.45 -395.22,254.30 -416.62,238.75 -390.17,238.75\"/><polygon points=\"228.00,-272.80 238.06,-241.85 270.61,-241.84 244.28,-222.71 254.33,-191.76 228.00,-210.89 201.67,-191.76 211.72,-222.71 185.39,-241.84 217.94,-241.85\"/><polygon points=\"515.00,213.20 525.06,244.15 557.61,244.16 531.28,263.29 541.33,294.24 515.00,275.11 488.67,294.24 498.72,263.29 472.39,244.16 504.94,244.15\"/><polygon points=\"545.00,286.60 553.17,311.75 579.62,311.75 558.22,327.30 566.40,352.45 545.00,336.90 523.60,352.45 531.78,327.30 510.38,311.75 536.83,311.75\"/><polygon points=\"368.00,440.60 376.17,465.75 402.62,465.75 381.22,481.30 389.40,506.45 368.00,490.90 346.60,506.45 354.78,481.30 333.38,465.75 359.83,465.75\"/><polygon points=\"0.00,285.20 10.06,316.15 42.61,316.16 16.28,335.29 26.33,366.24 0.00,347.11 -26.33,366.24 -16.28,335.29 -42.61,316.16 -10.06,316.15\"/><polygon points=\"85.00,147.60 93.17,172.75 119.62,172.75 98.22,188.30 106.40,213.45 85.00,197.90 63.60,213.45 71.78,188.30 50.38,172.75 76.83,172.75\"/><polygon points=\"0.00,81.60 8.17,106.75 34.62,106.75 13.22,122.30 21.40,147.45 0.00,131.90 -21.40,147.45 -13.22,122.30 -34.62,106.75 -8.17,106.75\"/><polygon points=\"-74.00,154.60 -67.40,174.91 -46.04,174.91 -63.32,187.47 -56.72,207.79 -74.00,195.23 -91.28,207.79 -84.68,187.47 -101.96,174.91 -80.60,174.91\"/><polygon points=\"-295.00,345.20 -284.94,376.15 -252.39,376.16 -278.72,395.29 -268.67,426.24 -295.00,407.11 -321.33,426.24 -311.28,395.29 -337.61,376.16 -305.06,376.15\"/><polygon points=\"220.00,458.60 228.17,483.75 254.62,483.75 233.22,499.30 241.40,524.45 220.00,508.90 198.60,524.45 206.78,499.30 185.38,483.75 211.83,483.75\"/><polygon points=\"-280.00,-6.40 -271.83,18.75 -245.38,18.75 -266.78,34.30 -258.60,59.45 -280.00,43.90 -301.40,59.45 -293.22,34.30 -314.62,18.75 -288.17,18.75\"/></g>"
+    },
+    "za": {
+      "viewBox": "0 0 9 6",
+      "svg": "<clipPath id=\"za-c\"><path d=\"M0 0l4.5 3L0 6\" id=\"za-b\"/></clipPath><clipPath id=\"za-a\"><path d=\"M0 0h9v6H0z\"/></clipPath><g clip-path=\"url(#za-a)\"><path d=\"M0 0v6h9V0z\" fill=\"#001489\"/><path d=\"M0 0v3h9V0z\" fill=\"#E03C31\"/><g stroke-width=\"2\" stroke=\"#fff\"><path d=\"M0 0l4.5 3L0 6m4.5-3H9\" id=\"za-d\"/><use href=\"#za-b\" stroke=\"#FFB81C\" clip-path=\"url(#za-c)\"/></g><use href=\"#za-d\" fill=\"none\" stroke=\"#007749\" stroke-width=\"1.2\"/></g>"
+    },
+    "eg": {
+      "viewBox": "0 0 900 600",
+      "svg": "<rect width=\"900\" height=\"600\" fill=\"#000\"/><rect width=\"900\" height=\"400\" fill=\"#fff\"/><rect width=\"900\" height=\"200\" fill=\"#CE1126\"/><g fill=\"#C09300\"><path d=\"M450 238c-14 0-22 10-22 22 0 6 2 10 6 13l-48-22-8 112 46-40 6 52h40l6-52 46 40-8-112-48 22c4-3 6-7 6-13 0-12-8-22-22-22z\"/><path d=\"M420 322h60v40c0 14-14 22-30 26-16-4-30-12-30-26z\" fill=\"#fff\" stroke=\"#C09300\" stroke-width=\"6\"/><path d=\"M432 330h12v46h-12zM456 330h12v46h-12z\"/><path d=\"M400 398h100v12H400z\"/></g>"
+    },
+    "ae": {
+      "viewBox": "0 0 12 6",
+      "svg": "<rect width=\"12\" height=\"2\" fill=\"#00732F\"/><rect width=\"12\" height=\"2\" y=\"2\" fill=\"#fff\"/><rect width=\"12\" height=\"2\" y=\"4\" fill=\"#000\"/><rect width=\"3\" height=\"6\" fill=\"#FF0000\"/>"
+    },
+    "in": {
+      "viewBox": "0 0 225 150",
+      "svg": "<rect width=\"225\" height=\"150\" fill=\"#FF9933\"/><rect width=\"225\" height=\"50\" y=\"50\" fill=\"#fff\"/><rect width=\"225\" height=\"50\" y=\"100\" fill=\"#138808\"/><g transform=\"translate(112.5,75)\"><circle r=\"20\" fill=\"#000080\"/><circle r=\"17.5\" fill=\"#fff\"/><circle r=\"3.5\" fill=\"#000080\"/><g id=\"in-d\"><g id=\"in-c\"><g id=\"in-b\"><g id=\"in-a\"><circle r=\"0.875\" fill=\"#000080\" transform=\"rotate(7.5) translate(17.5)\"/><path fill=\"#000080\" d=\"M 0,17.5 0.6,7 C 0.6,7 0,2 0,2 0,2 -0.6,7 -0.6,7 L 0,17.5 z\"/></g><use href=\"#in-a\" transform=\"rotate(15)\"/></g><use href=\"#in-b\" transform=\"rotate(30)\"/></g><use href=\"#in-c\" transform=\"rotate(60)\"/></g><use href=\"#in-d\" transform=\"rotate(120)\"/><use href=\"#in-d\" transform=\"rotate(-120)\"/></g>"
+    },
+    "cn": {
+      "viewBox": "0 0 30 20",
+      "svg": "<rect width=\"30\" height=\"20\" fill=\"#DE2910\"/><path d=\"M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z\" fill=\"#FFDE00\" transform=\"translate(5,5) rotate(0) scale(3)\"/><path d=\"M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z\" fill=\"#FFDE00\" transform=\"translate(10,2) rotate(23.036243) scale(1)\"/><path d=\"M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z\" fill=\"#FFDE00\" transform=\"translate(12,4) rotate(45.869898) scale(1)\"/><path d=\"M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z\" fill=\"#FFDE00\" transform=\"translate(12,7) rotate(69.945396) scale(1)\"/><path d=\"M0,-1 0.587785,0.809017 -0.951057,-0.309017H0.951057L-0.587785,0.809017z\" fill=\"#FFDE00\" transform=\"translate(10,9) rotate(20.659808) scale(1)\"/>"
+    },
+    "jp": {
+      "viewBox": "0 0 900 600",
+      "svg": "<rect fill=\"#fff\" height=\"600\" width=\"900\"/><circle fill=\"#BC002D\" cx=\"450\" cy=\"300\" r=\"180\"/>"
+    },
+    "au": {
+      "viewBox": "0 0 10080 5040",
+      "svg": "<clipPath id=\"au-b\"><path d=\"M0 0h6v3H0z\"/></clipPath><clipPath id=\"au-c\"><path d=\"M0 0v1.5h6V3zm6 0H3v3H0z\"/></clipPath><path fill=\"#012169\" d=\"M0 0h10080v5040H0z\"/><path d=\"M0 0l6 3m0-3L0 3\" stroke=\"#fff\" stroke-width=\".6\" clip-path=\"url(#au-b)\" transform=\"scale(840)\"/><path d=\"M0 0l6 3m0-3L0 3\" stroke=\"#E4002B\" stroke-width=\".4\" clip-path=\"url(#au-c)\" transform=\"scale(840)\"/><path d=\"M2520 0v2520M0 1260h5040\" stroke=\"#fff\" stroke-width=\"840\"/><path d=\"M2520 0v2520M0 1260h5040\" stroke=\"#E4002B\" stroke-width=\"504\"/><g fill=\"#fff\"><path transform=\"translate(2520,3780) scale(2.1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(7560,4200) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(6300,2205) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(7560,840) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(8680,1869) scale(1)\" d=\"M0-360l69.421 215.845 212.038-80.301L155.99-35.603l194.985 115.71-225.881 19.651 31.105 224.59L0 160l-156.198 164.349 31.105-224.59-225.881-19.651 194.986-115.711-125.471-188.853 212.038 80.301z\"/><path transform=\"translate(8064,2730)\" d=\"M0-210L54.86-75.508l144.862 10.614L88.765 28.842l34.67 141.052L0 93.334l-123.435 76.56 34.67-141.052-110.957-93.736L-54.86-75.508z\"/></g>"
+    }
+  }
+}
