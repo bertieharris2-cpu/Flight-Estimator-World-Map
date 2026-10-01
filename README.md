@@ -14,7 +14,7 @@ How it works:
 2. Set an estimate with **−** and **+** (half-hour steps), or type one.
 3. Tap **REVEAL** to see the real time and how far out the estimate was.
 
-- **Known flights** (Spain 2½ hours, New York 8 hours) are always shown under the map.
+- **Known flights** (Egypt 5 hours, New York 8 hours) are always shown under the map. Egypt replaced Spain as the short yardstick: short flights spend so much time taking off and landing that Spain looks like 1½ squares but takes 2½ hours.
 - The grid starts **hidden**, so children make a ballpark estimate first. **Show squares** (bottom left of the map) brings it back: 1 square ≈ 1 hour.
 - **Results** (top right) lists estimates, with Copy and Clear.
 - **Teacher** has flag filters, grid, benchmark flights, animations (on/off and plane speed) and reset.

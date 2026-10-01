@@ -23,7 +23,7 @@
     ]
   },
   "benchmarks": [
-    "es",
+    "eg",
     "us"
   ],
   "continents": [

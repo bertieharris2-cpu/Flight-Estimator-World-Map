@@ -22,7 +22,7 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     const markers = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')));
     check(markers.length === 24, `${vp.name}: 23 flags + home shown (${markers.length})`);
     check(await page.$eval('#grid', e => getComputedStyle(e).display) === 'none', `${vp.name}: grid hidden at start`);
-    check(/Spain/.test(await page.textContent('#known')) && /8 hours/.test(await page.textContent('#known')), `${vp.name}: known flights always on display`);
+    check(/Egypt/.test(await page.textContent('#known')) && /5 hours/.test(await page.textContent('#known')) && /8 hours/.test(await page.textContent('#known')), `${vp.name}: known flights always on display`);
 
     // tap a flag (Japan), estimate, reveal
     const jp = await page.$('[data-dest="jp"] .badgeInner use');
@@ -92,7 +92,7 @@ const check = (ok, msg) => { console.log((ok ? 'PASS ' : 'FAIL ') + msg); if (!o
     await page.click('#teacherBtn');
     await page.click('#hideAll');
     let shown = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')).sort());
-    check(JSON.stringify(shown) === JSON.stringify(['es', 'uk', 'us'].sort()), `${vp.name}: hide all keeps home + benchmarks (${shown})`);
+    check(JSON.stringify(shown) === JSON.stringify(['eg', 'uk', 'us'].sort()), `${vp.name}: hide all keeps home + benchmarks (${shown})`);
     await page.screenshot({ path: out(vp.name + '-5-teacher.png') });
     await page.click('#tBench');
     shown = await page.$$eval('#markers [data-dest]', els => els.map(e => e.getAttribute('data-dest')));

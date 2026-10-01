@@ -172,7 +172,7 @@ td svg { height: 16px; border: 1px solid #fff; vertical-align: -2px; }
     <div id="countryList"></div>
     <h3>Map</h3>
     <div class="toggle"><span>Grid squares</span><button class="btn small" id="tGrid" aria-pressed="false">Off</button></div>
-    <div class="toggle"><span>Benchmark flights<br><small style="color:var(--muted)">Spain &amp; New York</small></span><button class="btn small" id="tBench" aria-pressed="true">On</button></div>
+    <div class="toggle"><span>Benchmark flights<br><small style="color:var(--muted)" id="benchNames"></small></span><button class="btn small" id="tBench" aria-pressed="true">On</button></div>
     <div class="toggle" id="tzRow" hidden><span>Time zone lines</span><button class="btn small" id="tTz" aria-pressed="false">Off</button></div>
     <h3>Movement</h3>
     <div class="toggle"><span>Animations</span><button class="btn small" id="tAnim" aria-pressed="true">On</button></div>
@@ -512,6 +512,7 @@ function reveal() {
 /* ---------- known flights box ---------- */
 function renderKnown() {
   var k = $('known');
+  $('benchNames').textContent = D.benchmarks.map(function (id) { return name(byId(id)); }).join(' & ');
   k.hidden = !S.bench;
   k.innerHTML = '<span class="t">Known flights</span>' + D.benchmarks.map(function (id) {
     var d = byId(id); return '<span class="k">' + flagSvg(d.flag, 22) + name(d) + ' &nbsp;' + fmtH(d.hours) + '</span>';
